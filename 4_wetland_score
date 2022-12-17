@@ -1,0 +1,85 @@
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+
+var wetlands = ee.Image("projects/ee-lucasljardim9/assets/Cifor_wetlands")
+               .clip(bioma)
+               .reproject({crs: "EPSG:4326",
+                           scale: 92.76624});
+
+var wetlands_binary = wetlands.where(wetlands.gt(0), 1);
+
+//Wetland density 100 acres
+/*
+The circle radius was defined by the TNC area, calculating 100 acre backwards to squared meters, than to meters.
+
+r = (A/pi)^1/2
+
+100 acre equal to 404686 squared meters
+
+r = (404686/3.14)^1/2
+*/
+
+var r = ee.Number(404686).divide(ee.Number(Math.PI)).sqrt() // radius in meters
+
+var radius_pixels = r.divide(ee.Number(90)).round()
+
+var neighbors = wetlands_binary.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
+
+var wetlands_count = neighbors.reduce(ee.Reducer.sum()).toDouble();
+
+var neighbors_amount = neighbors.bandNames().length();
+
+var wetlands_density = wetlands_count.divide(ee.Number(neighbors_amount));
+
+// Wetland density 1000 acre
+
+var r = ee.Number(4046860).divide(ee.Number(Math.PI)).sqrt() // radius in meters
+
+var radius_pixels = r.divide(ee.Number(90)).round()
+
+var neighbors = wetlands_binary.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
+
+var wetlands_count = neighbors.reduce(ee.Reducer.sum()).toDouble();
+
+var neighbors_amount = neighbors.bandNames().length();
+
+var wetlands_density_1000 = wetlands_count.divide(ee.Number(neighbors_amount));
+
+
+
+// Exporting wetlands patchiness
+
+Export.image.toDrive({
+  image: wetlands_count,
+  description: 'wetlands_patchiness',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 631694567
+});
+
+// Wetlands density
+
+Export.image.toDrive({
+  image: wetlands_density,
+  description: 'wetlands_density',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 631694567
+});
+
+Export.image.toDrive({
+  image: wetlands_density_1000,
+  description: 'wetlands_density_1000',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 631694567
+});
+
+//var freq = wetlands_count.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: bioma, maxPixels: 232845367});
+
+//print(freq)
+            
+/*
+Map.setCenter(-50, -15, 7);
+
+Map.addLayer(wetlands_count);
+*/
