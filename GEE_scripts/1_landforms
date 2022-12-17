@@ -1,6 +1,7 @@
-var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
-
-var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1");
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
+    flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(bioma);
 
@@ -219,7 +220,7 @@ Map.addLayer(landform_richness)
 
 //print(slope.reduceRegion(ee.Reducer.first(), ee.Geometry.Point([-49.71676, -15.54498])))
 
-/*
+
 Export.image.toDrive({
   image: landform_richness,
   description: 'landform_richness',
@@ -227,4 +228,3 @@ Export.image.toDrive({
   region: bioma,
   maxPixels: 631694567
 });
-*/
