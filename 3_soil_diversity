@@ -1,0 +1,74 @@
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+
+var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(bioma);
+
+/*
+Elevation range
+
+The circle radius was defined by the TNC area, calculating 100 acre backwards to squared meters, than to meters.
+
+r = (A/pi)^1/2
+
+100 acre equal to 404686 squared meters
+
+r = (404686/3.14)^1/2
+*/
+
+var r = ee.Number(4046860).divide(ee.Number(Math.PI)).sqrt(); // radius in meters
+
+var radius_pixels = r.divide(ee.Number(90)).round();
+
+var neighbor = dataset.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
+
+var elevation_max = neighbor.reduce(ee.Reducer.max());
+
+var elevation_min = neighbor.reduce(ee.Reducer.min());
+
+var elevation_range = elevation_max.subtract(elevation_min).abs();
+
+var elevation = ee.Image.cat(dataset, elevation_range)
+                 .rename(['elevation', 'elevation_range']);
+                 
+var regression = elevation.reduceRegion({
+     reducer: ee.Reducer.linearFit(),
+     geometry: bioma,
+     maxPixels: 463690740
+    });
+
+var pred = elevation.select('elevation').multiply(ee.Number(regression.get('scale')));
+
+var predict = pred.add(ee.Number(regression.get('offset')));
+
+var residuals = elevation.select('elevation_range').subtract(predict).rename(['residuals']);
+
+/*
+Map.setCenter(-40, -8, 7);
+
+Map.addLayer(residuals);
+*/
+
+/*
+Export.image.toDrive({
+  image: residuals,
+  description: 'elevation_range_residual',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 631694547 });
+*/
+
+/*
+var sample = ee.FeatureCollection.randomPoints({
+               region: bioma,
+               points: 5000
+             });
+             
+var plot_image = ee.Image.cat(residuals, elevation.select('elevation'))
+                 .sampleRegions({collection: sample});  
+
+
+var chart = ui.Chart.feature.byFeature(plot_image, 'elevation', ['residuals'])
+  .setChartType('ScatterChart');
+  
+  print(chart);
+
+*/
