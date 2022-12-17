@@ -1,4 +1,8 @@
-var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
+    table = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
 
 var wetlands = ee.Image("projects/ee-lucasljardim9/assets/Cifor_wetlands")
                .clip(bioma)
