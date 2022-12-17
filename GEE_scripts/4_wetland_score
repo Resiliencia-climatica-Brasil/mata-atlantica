@@ -46,11 +46,11 @@ var wetlands_density_1000 = wetlands_count.divide(ee.Number(neighbors_amount));
 
 
 
-// Exporting wetlands patchness
+// Exporting wetlands patchiness
 
 Export.image.toDrive({
   image: wetlands_count,
-  description: 'wetlands_patchness',
+  description: 'wetlands_patchiness',
   scale: 92.76624,
   region: bioma,
   maxPixels: 631694567
