@@ -11,7 +11,11 @@ bioma <- vect("./processed_data/Biomas/Caatinga.shp")
 
 # Transform elevation range and calculate Z-scores -------------------------
 
-elevation_range <- log(terra::rast("./processed_data/elevation_range/elevation_range_residual.tif") + 0.01)
+elevation_range <- terra::rast("./processed_data/elevation_range/elevation_range_residual.tif")
+
+#elevation_range[is.na(elevation_range)] <- 0
+
+elevation_range <- terra::mask(elevation_range, bioma)
 
 elevation_range_Z <- (elevation_range - global(elevation_range, mean, na.rm = TRUE)[, 1]) / global(elevation_range, sd, na.rm = TRUE)[, 1]
 
@@ -21,6 +25,8 @@ elevation_range_Z <- (elevation_range - global(elevation_range, mean, na.rm = TR
 # Transform landform variety and calculate Z-scores -----------------------
 
 landform  <- log(terra::rast("./processed_data/landform_diversity/landform_richness.tif") + 1)
+
+landform <- terra::mask(landform, bioma)
 
 landform_Z <- (landform - global(landform, mean, na.rm = TRUE)[, 1]) / global(landform, sd, na.rm = TRUE)[, 1]
 
@@ -82,30 +88,31 @@ wetland_patchness_Z <- (wetland_patchness - global(wetland_patchness, mean, na.r
 # Wetland score -----------------------------------------------------
 # Wetland score is the average of wetland density and wetland patchness, but only when patchness is higher than density
 
-wetland_score <- terra::ifel(wetland_patchness_Z > wetland_density, ((wetland_density * 3) + wetland_patchness_Z) / 4, wetland_density, 
-                             filename = "./processed_data/wetland/wetland_score.tif",
-                             overwrite = TRUE)
-
+wetland_score <- terra::ifel(wetland_patchness_Z > wetland_density, ((wetland_density * 3) + wetland_patchness_Z) / 4, wetland_density)
+                     
 # Soil diversity ----------------------------------------------------------
 
 soil_diversity <- terra::rast("./processed_data/soil/soil_diversity.tif")
 
 soil_diversity <- terra::project(soil_diversity, landform_Z)
 
-soil_diversity_Z <- (soil_diversity - global(soil_diversity, mean, na.rm = TRUE)[, 1]) / global(soil_diversity, sd, na.rm = TRUE)[, 1]
+soil_diversity[is.na(soil_diversity)] <- 0
 
+soil_diversity <- terra::mask(soil_diversity, bioma)
+
+soil_diversity_Z <- (soil_diversity - global(soil_diversity, mean, na.rm = TRUE)[, 1]) / global(soil_diversity, sd, na.rm = TRUE)[, 1]
 
 # Export Z rasters --------------------------------------------------------
 
 dir.create("./processed_data/z_values")
 
-terra::writeRaster(landform_Z, "./processed_data/z_values/landform_Z.tif")
+terra::writeRaster(landform_Z, "./processed_data/z_values/landform_Z.tif", overwrite = TRUE)
 
-terra::writeRaster(elevation_range_Z, "./processed_data/z_values/elevation_range_Z.tif")
+terra::writeRaster(elevation_range_Z, "./processed_data/z_values/elevation_range_Z.tif", overwrite = TRUE)
 
-terra::writeRaster(wetland_score, "./processed_data/z_values/wetland_score.tif")
+terra::writeRaster(wetland_score, "./processed_data/z_values/wetland_score.tif", overwrite = TRUE)
 
-terra::writeRaster(soil_diversity_Z, "./processed_data/z_values/soil_diversity_Z.tif")
+terra::writeRaster(soil_diversity_Z, "./processed_data/z_values/soil_diversity_Z.tif", overwrite = TRUE)
 
 
 

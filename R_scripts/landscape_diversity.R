@@ -73,7 +73,7 @@ landscape_diversity[!test_1 & test_2 & test_3] <- average_soil_3[!test_1 & test_
 
 landscape_diversity[!test_1 & !test_2 & test_3] <- average_soil_4[!test_1 & !test_2 & test_3]
 
-
+terra::writeRaster(landscape_diversity, "./graphics/landscape_diversity.tif", overwrite = TRUE)
 
 
 
