@@ -11,7 +11,7 @@ filtered_lines <- grep(".zip|.doc|.docx", IBGE_folder, value = TRUE)
 
 files <- gsub("^.*href=\\\"|\\\">.*$", "", filtered_lines, perl = TRUE)
 
-dir.create("./data/soil/IBGE")
+dir.create("./data/soil/IBGE", recursive = T)
 
 # Downloading files -------------------------------------------------------
 

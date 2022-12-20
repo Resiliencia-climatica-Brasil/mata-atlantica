@@ -1,6 +1,6 @@
 library(terra)
 
-bioma <- vect("./processed_data/Biomas/Caatinga.shp")
+bioma <- vect("./processed_data/ecoregions/wwf_cerrado.shp")
 
 # Elevation range ---------------------------------------------------------
 
@@ -104,7 +104,7 @@ soil_diversity_Z <- (soil_diversity - global(soil_diversity, mean, na.rm = TRUE)
 
 # Export Z rasters --------------------------------------------------------
 
-dir.create("./processed_data/z_values")
+dir.create("./processed_data/z_values", recursive = T)
 
 terra::writeRaster(landform_Z, "./processed_data/z_values/landform_Z.tif", overwrite = TRUE)
 

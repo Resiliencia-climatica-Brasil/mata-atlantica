@@ -1,6 +1,6 @@
 # Create bioma folder -----------------------------------------------------
 
-dir.create("./data/bioma")
+dir.create("./data/bioma", recursive = T)
 
 
 # Download bioma zip file -------------------------------------------------
