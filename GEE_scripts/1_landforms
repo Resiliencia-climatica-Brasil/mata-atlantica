@@ -4,7 +4,7 @@ var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // 
 var baf = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf")
-var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(bioma);
+var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(baf);
 
 var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
   .select("upg")
