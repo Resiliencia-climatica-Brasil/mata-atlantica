@@ -1,9 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
-    flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1");
+    flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1"),
+    baf = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // 
-var baf = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf")
+
 var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(baf);
 
 var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
@@ -220,12 +221,12 @@ Map.addLayer(landform_types.sldStyle(sld_intervals), {});
 //print(slope.reduceRegion(ee.Reducer.first(), ee.Geometry.Point([-49.71676, -15.54498])))
 
 
-/*
+
 Export.image.toAssets({
   image: landform_richness,
-  description: 'landform_richness',
+  description: 'landform_richness_baf',
   scale: 92.76624,
-  region: bioma,
+  region: baf,
   maxPixels: 631694567
 });
-*/
+
