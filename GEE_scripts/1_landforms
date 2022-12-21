@@ -3,6 +3,7 @@ var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
     flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // 
+var baf = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf")
 var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(bioma);
 
 var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
@@ -141,9 +142,8 @@ var landform_types = landform_combination
 
 
 //Checking values
-//var freq = landform_types.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: bioma, maxPixels: 232845367});
-
-//print(freq)
+var freq = landform_types.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: bioma, maxPixels: 232845367});
+print(freq)
 
 
 /*
@@ -164,7 +164,7 @@ var radius_pixels = r.divide(ee.Number(90)).round()
 var landform_richness = landform_types.neighborhoodToBands(ee.Kernel.circle(radius_pixels)).reduce(ee.Reducer.countDistinct())
 // 9 values
 // Visualization
-/*
+
 var visualization = {
   bands: ['sum'],
   min: 3,
@@ -184,7 +184,6 @@ var visualization = {
             "#209534", // 44
             "#000000"] // 99
 };
-*/
 
 var sld_intervals =
 '<RasterSymbolizer>' +
@@ -206,25 +205,27 @@ var sld_intervals =
   '</ColorMap>' +
 '</RasterSymbolizer>';
 
-/*
+
 // Valores de slopes nulos
 
 var landform_30 = landform_combination.mask(landform_combination.eq(20))
-*/
+
 
 Map.setCenter(-40, -8, 7);
 
-Map.addLayer(landform_richness)
-//Map.addLayer(landform_types.sldStyle(sld_intervals), {});
+//Map.addLayer(landform_richness)
+Map.addLayer(landform_types.sldStyle(sld_intervals), {});
 
 
 //print(slope.reduceRegion(ee.Reducer.first(), ee.Geometry.Point([-49.71676, -15.54498])))
 
 
-Export.image.toDrive({
+/*
+Export.image.toAssets({
   image: landform_richness,
   description: 'landform_richness',
   scale: 92.76624,
   region: bioma,
   maxPixels: 631694567
 });
+*/
