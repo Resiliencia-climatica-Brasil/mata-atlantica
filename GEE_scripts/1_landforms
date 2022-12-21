@@ -142,7 +142,7 @@ var landform_types = landform_combination
 
 
 //Checking values
-var freq = landform_types.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: bioma, maxPixels: 232845367});
+var freq = landform_types.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: baf, maxPixels: 232845367});
 print(freq)
 
 
