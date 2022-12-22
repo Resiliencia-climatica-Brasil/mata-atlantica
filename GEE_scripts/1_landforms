@@ -222,7 +222,7 @@ Map.addLayer(landform_types.sldStyle(sld_intervals), {});
 
 
 
-Export.image.toAssets({
+Export.image.toDrive({
   image: landform_richness,
   description: 'landform_richness_baf',
   scale: 92.76624,
