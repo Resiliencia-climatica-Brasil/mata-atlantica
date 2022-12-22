@@ -42,10 +42,9 @@ var predict = pred.add(ee.Number(regression.get('offset')));
 var residuals = elevation.select('elevation_range').subtract(predict).rename(['residuals']);
 
 
-Map.setCenter(-40, -8, 7);
+Map.setCenter(-43, -21, 7);
 
 Map.addLayer(residuals);
-*/
 
 /*
 Export.image.toDrive({
@@ -56,7 +55,7 @@ Export.image.toDrive({
   maxPixels: 631694547 });
 */
 
-/*
+
 var sample = ee.FeatureCollection.randomPoints({
                region: bioma,
                points: 5000
@@ -70,5 +69,3 @@ var chart = ui.Chart.feature.byFeature(plot_image, 'elevation', ['residuals'])
   .setChartType('ScatterChart');
   
   print(chart);
-
-*/
