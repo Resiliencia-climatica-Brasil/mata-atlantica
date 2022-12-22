@@ -214,8 +214,8 @@ var landform_30 = landform_combination.mask(landform_combination.eq(20))
 
 Map.setCenter(-43, -21, 7);
 
-//Map.addLayer(landform_richness)
-Map.addLayer(landform_types.sldStyle(sld_intervals), {});
+Map.addLayer(landform_richness)
+//Map.addLayer(landform_types.sldStyle(sld_intervals), {});
 
 
 //print(slope.reduceRegion(ee.Reducer.first(), ee.Geometry.Point([-49.71676, -15.54498])))
@@ -226,7 +226,6 @@ Export.image.toDrive({
   image: landform_richness,
   description: 'landform_richness_baf',
   scale: 92.76624,
-  region: baf,
-  maxPixels: 631694567
+  region: baf
 });
 
