@@ -1,4 +1,4 @@
-var bioma = ee.FeatureCollection("projects/andreasancheztapia/assets/baf");
+var bioma = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf");
 
 var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(bioma);
 
