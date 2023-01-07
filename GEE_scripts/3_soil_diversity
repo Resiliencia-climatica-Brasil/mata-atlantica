@@ -1,8 +1,8 @@
 var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
-
+//transforma em dummy
 var soil = ee.FeatureCollection("projects/ee-lucasljardim9/assets/soil_IBGE")
            .select("cod_simbol");
-           
+// existe o solo ou nao, roda para todos os tipos de solo           
 var soil_presence = function(code){           
            
     var type = soil.filter(ee.Filter.eq("cod_simbol", code))
@@ -51,12 +51,13 @@ var soil_codes = ["AR", "EKg", "LAd", "LVAd",  "RQo", "EKgu", "GXbd", "PVAd",
                   
 
 var soil_list = soil_codes.map(soil_presence);
-
+// devole uma lista
 
 var soil_diversity = ee.ImageCollection.fromImages(soil_list)
                      .toBands()
                      .reduce("sum")
                      .toDouble()
+//quantos tipos de solo tem em tono da celula. 
 /*                     
 Export.image.toDrive({
   image: soil_diversity,
