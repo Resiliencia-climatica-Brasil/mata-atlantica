@@ -15,7 +15,7 @@ r = (404686/3.14)^1/2
 */
 
 var r = ee.Number(4046860).divide(ee.Number(Math.PI)).sqrt(); // radius in meters
-
+print(r)
 var radius_pixels = r.divide(ee.Number(90)).round();
 
 var neighbor = dataset.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
@@ -40,7 +40,7 @@ var pred = elevation.select('elevation').multiply(ee.Number(regression.get('scal
 var predict = pred.add(ee.Number(regression.get('offset')));
 
 var residuals = elevation.select('elevation_range').subtract(predict).rename(['residuals']);
-
+print(residuals)
 
 Map.setCenter(-43, -21, 7);
 
@@ -53,7 +53,6 @@ Export.image.toDrive({
   scale: 92.76624,
   region: bioma,
   maxPixels: 631694547 });
-*/
 
 
 var sample = ee.FeatureCollection.randomPoints({
@@ -69,3 +68,5 @@ var chart = ui.Chart.feature.byFeature(plot_image, 'elevation', ['residuals'])
   .setChartType('ScatterChart');
   
   print(chart);
+
+*/
