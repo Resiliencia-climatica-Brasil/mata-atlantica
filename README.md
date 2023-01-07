@@ -133,9 +133,15 @@ fs::dir_tree()
     ## │           │   ├── pedo_ponto.shp
     ## │           │   └── pedo_ponto.shx
     ## │           └── pedo_ponto.zip
-    ## └── processed_data
-    ##     └── ecoregions
-    ##         ├── wwf_cerrado.dbf
-    ##         ├── wwf_cerrado.prj
-    ##         ├── wwf_cerrado.shp
-    ##         └── wwf_cerrado.shx
+    ## ├── processed_data
+    ## │   ├── bioma
+    ## │   │   ├── baf.dbf
+    ## │   │   ├── baf.prj
+    ## │   │   ├── baf.shp
+    ## │   │   └── baf.shx
+    ## │   └── ecoregions
+    ## │       ├── wwf_cerrado.dbf
+    ## │       ├── wwf_cerrado.prj
+    ## │       ├── wwf_cerrado.shp
+    ## │       └── wwf_cerrado.shx
+    ## └── rgee.R
