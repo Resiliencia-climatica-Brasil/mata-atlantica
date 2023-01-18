@@ -1,8 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
-    table = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+var image = ee.Image("projects/ee-lucasljardim9/assets/Cifor_wetlands");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
 
 var wetlands = ee.Image("projects/ee-lucasljardim9/assets/Cifor_wetlands")
                .clip(bioma)
@@ -50,11 +49,11 @@ var wetlands_density_1000 = wetlands_count.divide(ee.Number(neighbors_amount));
 
 
 
-// Exporting wetlands patchiness
+// Exporting wetlands patchness
 
 Export.image.toDrive({
   image: wetlands_count,
-  description: 'wetlands_patchiness',
+  description: 'wetlands_patchness',
   scale: 92.76624,
   region: bioma,
   maxPixels: 631694567

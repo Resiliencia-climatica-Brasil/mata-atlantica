@@ -1,103 +1,224 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga"),
-    flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1"),
-    baf = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-// 
-
-var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(baf);
-
-var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
-  .select("upg")
-  .clip(baf);
-  
-// Calculate slope and aspect
-
-var slope = ee.Terrain.slope(dataset);
-
-var aspect = ee.Terrain.aspect(dataset);
-
-// Calculate moisture index 
-
-var moisture_index = flow_accumulation.add(ee.Number(1)).divide(slope.add(ee.Number(1))).log();
-
-// Split neighbor cells within a kernel of 1 pixel in bands
-
-var neigh = dataset.neighborhoodToBands(ee.Kernel.square(1));
-
-// Calculate a mean difference weighted by the distance (Land position Index(LPI))
-/*
- It is calculated by subtracting each neighbor cell by the focal cell, 
-   dividing them by their distances and calculating their average
+/**
+ * This script generates and exports to Google Drive a raster of landform varieties at a scale of ~ 90 m for a biome.  
 */
 
-/* We must calculate multiple windown size and take the average value*/
+/* Steps to calculate landform variety
 
-var LPI = neigh.subtract(dataset).divide(90).reduce(ee.Reducer.mean());
+1- Calculate relief slopes, aspects and Topographic Position Index (TPI) from a Digital Elevation Model.
 
-// Reclassifying landform values into classes
+2- Calculate a moisture index from a flow accumulation raster and slopes.
+
+3- Transform slopes, aspect, TPI and moisture index into classes
+
+4- Combine slopes, aspect, TPI and moisture classes into a code string
+
+5- Re-classify landform string into landform types
+
+6- Count the number of distinct landforms within a focal cell kernel (landform variety)
+
+7- Export landform variety raster
+
+*/
+
+/*
+First, we import a shapefile of brazilian biomes from IBGE (2018) and filter a biome to mask the rasters.
+*/
+// It is required to use bioma bounds instead the whole polygons because the feature complexity 
+// inhibits the image exportation.
+
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Biome")
+                       .select("Bioma")
+                       .filter(ee.Filter.eq("Bioma", "Cerrado"))
+                       .map(function(feature){
+                         return feature.bounds()
+                        })
+                       .geometry();
+
+/*
+Then, we import a Digital Elevation Model from Merit-DEM (...) at a scale of ~ 90 meters. 
+This raster solves problems of elevation estimates in flat regions and places with high density of wetlands.
+*/
+
+var DEM = ee.Image("MERIT/DEM/v1_0_3");
+
+/*
+Also, we import Merit-Hydro raster (..), which has a layer of flow accumulation derived from the above cited 
+Merit-DEM. This raster avoids issues related to calculate flow accumulation from flat areas. Additionally, 
+this raster avoids a concern about calculating flow direction and flow accumulation for biomes without 
+taking into account the whole basin flow.
+*/
+
+var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
+    .select("upg")
+
+/* 
+We calculate relief slopes and aspect based on the DEM. 
+*/
+
+var slope = ee.Terrain.slope(DEM);
+
+var aspect = ee.Terrain.aspect(DEM);
+
+/*
+Here we calculate a moisture index (..) based on the flow accumulation and slopes.
+A focal mean is calculated around the cells to smooth the index. The focal mean 
+is calculated around a neighborhood of 3 cells within a circle kernel.
+
+Moisture index = log((flow_accumulation + 1) / (slope + 1)) * 1000
+*/
+
+var moisture_index = flow_accumulation.
+                     add(ee.Number(1))
+                     .divide(slope.add(ee.Number(1)))
+                     .log()
+                     .multiply(1000)
+                     .focalMean({
+                       radius: 1, // the window is inversely proportional to the scale
+                       kernelType: "circle",
+                       units: "pixels"
+                     });
+                     
+/* Here we calculate a Topographic Position Index (TPI) (..). We create a function to calculate TPI 
+for a circular kernels of different sizes. Then, we took the average TPI to compose an index 
+that considers the landscape influence at multiple scales (Theobald..).
+
+TPI = sum(elevation_neighborhood -  focal_elevation) / number of neighborhood cells
+
+We define the neighborhood by a circular kernel. 
+
+The original TNC script used an annulus (torus) kernel to calculate the Land Position Index (LPI). It was required 
+to weight elevation differences by their geographical distances.
+
+LPI = sum((elevation_neighborhood -  focal_elevation) / cell distance) / number of neighborhood cells
+
+Annulus kernel is not implemented yet on GEE, we may implement, if it is necessary, a function to calculate it in the future to calculate LPI.
+*/
+
+/**
+ * Function to calculate Topographic Position Index (TPI) within a circle kernel of a specific size. 
+ * @param Kernel size in pixel units.
+ * @results An image of TPI values.
+*/
+
+var calculate_TPI = function(pixel_size){
+  
+// Split neighborhood cells within a circles kernel into bands
+
+var focal_mean = DEM.focalMean({
+                       radius: pixel_size,
+                       kernelType: "circle",
+                       units: "pixels"
+                     });
+
+// Calculate differences of the focal cell to the average neighborhood. 
+//It gives the same result as the average of differences as in the above equation 
+
+TPI = focal_mean.subtract(DEM)
+
+return TPI;
+}
+
+/*
+We need to define window sizes to calculate the average TPI. First, we
+defined a scale 
+we looked for window sizes that captured regional morphologies 
+such as plateaus, mountains. We tried values ranging from 1 to 15 cells
+and selected 7 as the optimal window capture high elevation elements (e.g. peaks and plateaus). Then, we chose
+values to capture finer features as hilltop and mountain peaks (1 and 5 cells). Then, we included
+intermediary values (10, 30) to smooth local values. We need to smooth values as they 
+enhance local variation, classifying peaks in plain areas. 
+*/
+
+//var window_size = [1, 5, 10, 30, 50]; //13 zoom level scale// window sizes
+
+var window_size = [1, 5, 7]; //90 meters scale window sizes
+
+var TPI = ee.ImageCollection(window_size.map(calculate_TPI))
+          .toBands()
+          .reduce("mean");
+          
+// Reclassifying indexes into classes
+/*
+Here, by try and error, we classified slope, aspect, TPI and moisture indexes into classes
+that will represent the landforms. We maintained slopes classes, and tuned TPI by looking 
+a terrain map in GEE and identifying values that better represented the landforms.
+For instance, values of TPI and slope that better classified Summits and
+Slope Crests. Then, values that classified Steep Slopes, Side Slopes
+and Footslopes properly. We tuned values to split Side Slopes and Hilltops. 
+So, we tuned values to identify Valleys and Dry flats. Unfortunatly, flat areas in plateaus 
+are classified as dry flats and valley, maybe a elevation criteria must be included 
+to separate flat lowlands from flat highlands.  
+To classify wet areas we tuned moisture index to capture rivers.
+*/
 
 var slope_classes = slope
-      .where(slope.gt(-1).and(slope.lte(0.02)), 1)
-      .where(slope.gt(0.02).and(slope.lte(0.06)), 2)
-      .where(slope.gt(0.06).and(slope.lte(25)), 3)
-      .where(slope.gt(25).and(slope.lte(35)), 4)
+      .where(slope.gte(-1).and(slope.lte(2)), 1)
+      .where(slope.gt(2).and(slope.lte(6)), 2)
+      .where(slope.gt(6).and(slope.lte(24)), 3)
+      .where(slope.gt(24).and(slope.lte(35)), 4)
       .where(slope.gt(35).and(slope.lte(90)), 5);
      
 // It seems Earth engine does not calculate -1 values for flat areas as ArcGis does
-
+// Aspect values were classified as north (1) and south (2) faces. Values between 90 and 270 are warm areas in south hemisphere. The other values are cool areas.  
 var aspect_classes = aspect
-      .where(aspect.gt(-1).and(aspect.lte(-1)), 0)
-      .where(aspect.gt(0).and(aspect.lte(90)), 1)
-      .where(aspect.gt(90).and(aspect.lte(270)), 2)
-      .where(aspect.gt(270).and(aspect.lte(360)), 1);
+      .where(aspect.lte(0), 0)
+      .where(aspect.gt(0).and(aspect.lte(90)), 2) // warm
+      .where(aspect.gt(90).and(aspect.lte(270)), 1) // cool
+      .where(aspect.gt(270).and(aspect.lte(360)), 2); // warm
       
-// LPI test, it needs to be checked with the original code
 
-var LPI_classes = LPI
-      .where(LPI.gt(-5).and(LPI.lte(-2)), 1)
-      .where(LPI.gt(-2).and(LPI.lte(0)), 2)
-      .where(LPI.gt(0).and(LPI.lte(1)), 3)
-      .where(LPI.gt(1).and(LPI.lte(3)), 4);
+// We tuned TPI by try and error
+var TPI_classes = TPI
+      .where(TPI.lte(-15), 1) // summits
+      .where(TPI.gt(-15).and(TPI.lt(-1)), 2) // Hilltops and Sideslopes
+      .where(TPI.gte(-1).and(TPI.lte(6)), 3) //Valleys and Toeslopes
+      .where(TPI.gt(6).and(TPI.lte(975)), 4) // Footslopes
+      .where(TPI.gt(975), 5); // Flat at the bottom steep slope
+
+// We defined the moisture values creating a mask of moisture raster. We chose values 
+// capturing rivers
 
 var moisture_classes = moisture_index
-      .where(moisture_index.lte(1.4), 0)
-      .where(moisture_index.gt(1.4), 1);
+      .where(moisture_index.lte(1200), 0) 
+      .where(moisture_index.gt(1200), 1); // moist areas
 
-//var landform = moisture_classes
-//                 .where(moisture_classes.eq(0).and(aspect_classes.eq(0)).and(LPI_classes.eq(1)).and(slope_classes.eq(1)), )
-                 
-      
-// Combining classes
+         
+// Combining classes into a string descriptor of landform types
 
 var classes_collection = ee.Image([moisture_classes.multiply(ee.Number(1000)), 
                                    aspect_classes.multiply(ee.Number(100)), 
-                                   LPI_classes.multiply(ee.Number(10)), 
+                                   TPI_classes.multiply(ee.Number(10)), 
                                    slope_classes]);
 
 var landform_combination = classes_collection.reduce(ee.Reducer.sum());
 
+// Re-classifying strings into landform types
+
 var landform_types = landform_combination
+                      .mask(landform_combination.gt(0)) // clean null values
                       .where(landform_combination.eq(11), 11)
-                      .where(landform_combination.eq(12), 12)
+                      .where(landform_combination.eq(12), 11)
                       .where(landform_combination.eq(13), 13)
-                      .where(landform_combination.eq(14), 99)
+                      .where(landform_combination.eq(14), 11)
                       .where(landform_combination.eq(15), 5)
+                      .where(landform_combination.eq(20), 21)
                       .where(landform_combination.eq(21), 21)
                       .where(landform_combination.eq(22), 22)
-                      .where(landform_combination.eq(23), 99)
-                      .where(landform_combination.eq(24), 99)
+                      .where(landform_combination.eq(23), 24)
+                      .where(landform_combination.eq(24), 24)
                       .where(landform_combination.eq(25), 5)
                       .where(landform_combination.eq(31), 30)
                       .where(landform_combination.eq(32), 32)
-                      .where(landform_combination.eq(33), 23)
-                      .where(landform_combination.eq(34), 99)
+                      .where(landform_combination.eq(33), 24)
+                      .where(landform_combination.eq(34), 24)
                       .where(landform_combination.eq(35), 5)
-                      .where(landform_combination.eq(41), 41)
-                      .where(landform_combination.eq(42), 41)
-                      .where(landform_combination.eq(43), 99)
-                      .where(landform_combination.eq(44), 99)
+                      .where(landform_combination.eq(40), 32)
+                      .where(landform_combination.eq(41), 32)
+                      .where(landform_combination.eq(42), 32)
+                      .where(landform_combination.eq(43), 43)
+                      .where(landform_combination.eq(44), 3)
                       .where(landform_combination.eq(45), 5)
+                      .where(landform_combination.eq(51), 51)
                       .where(landform_combination.eq(111), 11)
                       .where(landform_combination.eq(112), 11)
                       .where(landform_combination.eq(113), 13)
@@ -113,11 +234,12 @@ var landform_types = landform_combination
                       .where(landform_combination.eq(133), 23)
                       .where(landform_combination.eq(134), 3)
                       .where(landform_combination.eq(135), 5)
-                      .where(landform_combination.eq(141), 41)
-                      .where(landform_combination.eq(142), 41)
+                      .where(landform_combination.eq(141), 32)
+                      .where(landform_combination.eq(142), 32)
                       .where(landform_combination.eq(143), 43)
                       .where(landform_combination.eq(144), 3)
                       .where(landform_combination.eq(145), 5)
+                      .where(landform_combination.eq(151), 51)
                       .where(landform_combination.eq(211), 11)
                       .where(landform_combination.eq(212), 11)
                       .where(landform_combination.eq(213), 13)
@@ -130,23 +252,17 @@ var landform_types = landform_combination
                       .where(landform_combination.eq(225), 5)
                       .where(landform_combination.eq(231), 30)
                       .where(landform_combination.eq(232), 32)
-                      .where(landform_combination.eq(233), 23)
+                      .where(landform_combination.eq(233), 24)
                       .where(landform_combination.eq(234), 4)
                       .where(landform_combination.eq(235), 5)
-                      .where(landform_combination.eq(241), 41)
-                      .where(landform_combination.eq(242), 41)
+                      .where(landform_combination.eq(241), 32)
+                      .where(landform_combination.eq(242), 32)
                       .where(landform_combination.eq(243), 44)
                       .where(landform_combination.eq(244), 4)
                       .where(landform_combination.eq(245), 5)
-                      .where(landform_combination.gt(1000), 39);
+                      .where(landform_combination.eq(251), 51)
+                      .where(landform_combination.gte(1000), 39);
                       
-
-
-//Checking values
-var freq = landform_types.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: baf, maxPixels: 232845367});
-print(freq)
-
-
 /*
 Calculating landform richness within a circular kernel
 The circle radius was defined by the TNC area, calculating 100 acre backwards to squared meters, than meters.
@@ -160,72 +276,212 @@ r = (404686/3.14)^1/2
 
 var r = ee.Number(404686).divide(ee.Number(Math.PI)).sqrt() // radius in meters
 
-var radius_pixels = r.divide(ee.Number(90)).round()
-//quantos tipos de landform distinto tem na vizinhanca
-var landform_richness = landform_types.neighborhoodToBands(ee.Kernel.circle(radius_pixels)).reduce(ee.Reducer.countDistinct())
-// 9 values
-// Visualization
+var image_resolution = DEM.projection().nominalScale()
 
-var visualization = {
-  bands: ['sum'],
-  min: 3,
-  max: 39,
-  palette: ["#ffc82d", // 3 
-            "#997921", // 4
-            "#ff3110", // 5
-            "#ffffff", // 20
-            "#997f7f", // 21
-            "#dcbfbf", // 22
-            "#62dc82", // 23
-            "#cbd267", // 24  
-            "#6ca5a2", // 30
-            "#c49a3c", // 32
-            "#8437ff", // 39
-            "#40d43e", // 43
-            "#209534", // 44
-            "#000000"] // 99
-};
+var radius_pixels = r.divide(ee.Number(image_resolution)).round() // 4 cells
+
+var landform_variety = landform_types.neighborhoodToBands(ee.Kernel.circle(radius_pixels)).reduce(ee.Reducer.countDistinct())
+
+// Visualization
 
 var sld_intervals =
 '<RasterSymbolizer>' +
   '<ColorMap type="intervals" extended="false">' +
-    '<ColorMapEntry color="#ffc82d" quantity="3" label="Cool Steep Slope"/>' +
-    '<ColorMapEntry color="#997921" quantity="4" label="Warm Steep Slope"/>' +
-    '<ColorMapEntry color="#ff3110" quantity="5" label="Cliff"/>' +
-    '<ColorMapEntry color="#ffffff" quantity="20" label="Null"/>' +
-    '<ColorMapEntry color="#997f7f" quantity="21" label="Flat Hilltop"/>' +
-    '<ColorMapEntry color="#dcbfbf" quantity="22" label="Gentle Slope Hilltop"/>' +
-    '<ColorMapEntry color="#62dc82" quantity="23" label="Cool Sideslope"/>' +
-    '<ColorMapEntry color="#cbd267" quantity="24" label="Warm Sideslope"/>' +
-    '<ColorMapEntry color="#6ca5a2" quantity="30" label="Dry Flats"/>' +
-    '<ColorMapEntry color="#c49a3c" quantity="32" label="Valley/Toeslope"/>' +
-    '<ColorMapEntry color="#8437ff" quantity="39" label="Moist Flats"/>' +
-    '<ColorMapEntry color="#40d43e" quantity="43" label="Cool Footslope/Cove"/>' +
-    '<ColorMapEntry color="#209534" quantity="44" label="Warm Footslope/Cove"/>' +
-    '<ColorMapEntry color="#000000" quantity="99" label="Urban"/>' +
+    '<ColorMapEntry color="#ffc408" quantity="3" label="Cool Steep Slope"/>' +
+    '<ColorMapEntry color="#ffa101" quantity="4" label="Warm Steep Slope"/>' +
+    '<ColorMapEntry color="#ef595a" quantity="5" label="Cliff"/>' +
+    '<ColorMapEntry color="#ffbdbe" quantity="11" label="Summit/Ridgetop"/>' +
+    '<ColorMapEntry color="#6e4100" quantity="13" label="Slope Crest"/>' +
+    '<ColorMapEntry color="#af7b53" quantity="21" label="Flat Hilltop"/>' +
+    '<ColorMapEntry color="#c8c284" quantity="22" label="Gentle Slope Hilltop"/>' +
+    '<ColorMapEntry color="#c8f6ad" quantity="23" label="Cool Sideslope"/>' +
+    '<ColorMapEntry color="#83e763" quantity="24" label="Warm Sideslope"/>' +
+    '<ColorMapEntry color="#ffffbe" quantity="30" label="Dry Flats"/>' +
+    '<ColorMapEntry color="#a9a800" quantity="32" label="Valley/Toeslope"/>' +
+    '<ColorMapEntry color="#b671f2" quantity="39" label="Moist Flats"/>' +
+    '<ColorMapEntry color="#08a702" quantity="43" label="Cool Footslope/Cove"/>' +
+    '<ColorMapEntry color="#0a7000" quantity="44" label="Warm Footslope/Cove"/>' +
   '</ColorMap>' +
 '</RasterSymbolizer>';
 
 
-// Valores de slopes nulos
 
-var landform_30 = landform_combination.mask(landform_combination.eq(20))
+//Map.setCenter(-47.37141, -14.1680); //Plateau
+//Map.setCenter(-46.2448, -13.6721 ); //Plateau
+//Map.setCenter(-47.20997, -14.05082); //Summits
 
+//Map.setCenter(-46.96556, -13.96459); //hilltops
+//Map.setCenter(-50.98912, -12.4299, 11); //wetlands
 
-Map.setCenter(-43, -21, 7);
+//Map.setCenter(-46.87646, -13.89561, 11); //13 better zoom//flat areas
 
-//Map.addLayer(landform_richness)
+Map.setCenter(-43.40084, -2.334998) // delta
+
 Map.addLayer(landform_types.sldStyle(sld_intervals), {});
+print(Map.getScale())
+//Map.addLayer(landform_types)
 
+//Map.addLayer(landform_combination)
+//Map.addLayer(TPI)
+//Map.addLayer(slope)
+//Map.addLayer(bioma)
+//Map.addLayer(moisture_classes)
+//Map.addLayer(moisture_index)
 
-//print(slope.reduceRegion(ee.Reducer.first(), ee.Geometry.Point([-49.71676, -15.54498])))
-
-
-
-Export.image.toDrive({
-  image: landform_richness,
-  description: 'landform_richness_baf',
-  scale: 92.76624,
-  region: baf
+var legend = ui.Panel({
+             style: {
+               position:'bottom-right',
+               padding: '8px 10px'
+             }
 });
 
+var makeRow = function(color, name) {
+ 
+      // Create the label that is actually the colored box.
+      var colorBox = ui.Label({
+        style: {
+          backgroundColor: color,
+          // Use padding to give the box height and width.
+          padding: '8px',
+          margin: '0 0 4px 0'
+        }
+      });
+ 
+      // Create the label filled with the description text.
+      var description = ui.Label({
+        value: name,
+        style: {margin: '0 0 4px 6px'}
+      });
+ 
+      // return the panel
+      return ui.Panel({
+        widgets: [colorBox, description],
+        layout: ui.Panel.Layout.Flow('horizontal')
+      });
+};
+
+var palette = [
+"#ffc408",
+"#ffa101",
+"#ef595a",
+"#ffbdbe",
+"#6e4100",
+"#af7b53",
+"#c8c284", 
+"#c8f6ad",
+"#83e763",
+"#ffffbe",
+"#a9a800",
+"#b671f2",
+"#08a702",
+"#0a7000"
+];
+
+var land =[
+"3-Cool Steep Slope",
+"4-Warm Steep Slope",
+"5-Cliff",
+"11-Summit/Ridgetop",
+"13-Slope Crest",
+"21-Flat Hilltop",
+"22-Gentle Slope Hilltop",
+"23-Cool Sideslope",
+"24-Warm Sideslope",
+"30-Dry Flats",
+"32-Valley/Toeslope",
+"39-Moist Flats",
+"43-Cool Footslope/Cove",
+"44-Warm Footslope/Cove"
+];
+
+for (var i = 0; i < 14; i++) {
+  legend.add(makeRow(palette[i], land[i]));
+  }  
+ 
+Map.add(legend);
+
+/*Exporting images
+*/
+/*
+// Exporting landform varieties
+Export.image.toDrive({
+  image: landform_variety,
+  description: 'landform_variety',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 631694567
+});
+*/
+
+/*Exporting landform types for Cerrado       
+Export.image.toDrive({
+  image: landform_types,
+  description: 'landform_types',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels:  656402880
+});
+*/
+
+/**
+/* Exporting landform types for a flat area
+
+var flat = ee.Geometry.Polygon(
+          [[[-46.99134216374191, -13.860657258071942],
+          [-46.99134216374191, -13.94230764612206],
+          [-46.89504013127121, -13.94230764612206],
+          [-46.89504013127121, -13.860657258071942]]], null, false);
+          
+Export.image.toDrive({
+  image: landform_types,
+  description: 'landform_types_flat',
+  scale: 92.76624,
+  region: flat,
+  maxPixels:  656402880
+});          
+
+
+var delta = ee.Geometry.Polygon(
+          [[[-43.41491623291016, -2.3302812238332526],
+          [-43.41491623291016, -2.3872245106589762],
+          [-43.334578708496096, -2.3872245106589762],
+          [-43.334578708496096, -2.3302812238332526]]], null, false);
+
+Export.image.toDrive({
+  image: landform_types,
+  description: 'landform_types_delta',
+  scale: 92.76624,
+  region: delta,
+  maxPixels:  656402880
+});
+
+
+
+var wetland = ee.Geometry.Polygon(
+          [[[-51.022422307128906, -12.402070661828706],
+          [-51.022422307128906, -12.47985121316623],
+          [-50.9286951953125, -12.47985121316623],
+          [-50.9286951953125, -12.402070661828706]]], null, false);
+
+Export.image.toDrive({
+  image: landform_types,
+  description: 'landform_types_wetland',
+  scale: 92.76624,
+  region: wetland,
+  maxPixels:  656402880
+});
+
+var hilltops = ee.Geometry.Polygon(
+          [[[-47.35008148437501, -13.959592307779667],
+          [-47.35008148437501, -14.123459888496333],
+          [-47.14958099609376, -14.123459888496333],
+          [-47.14958099609376, -13.959592307779667]]], null, false);
+
+Export.image.toDrive({
+  image: landform_types,
+  description: 'landform_types_hilltops',
+  scale: 92.76624,
+  region: hilltops,
+  maxPixels:  656402880
+});
+*/

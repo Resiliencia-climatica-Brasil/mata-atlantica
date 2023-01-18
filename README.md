@@ -5,7 +5,7 @@ Andrea Sánchez-Tapia
 - <a href="#workflow" id="toc-workflow">Workflow</a>
 - <a href="#file-structure" id="toc-file-structure">File structure</a>
 
-This is preliminary structure for the climate resilience analyses
+This is a preliminary structure for the climate resilience analyses
 carried out by The Nature Conservancy Brazil and collaborators
 
 - Adapted from code by Lucas Jardim
@@ -139,9 +139,12 @@ fs::dir_tree()
     ## │   │   ├── baf.prj
     ## │   │   ├── baf.shp
     ## │   │   └── baf.shx
-    ## │   └── ecoregions
-    ## │       ├── wwf_cerrado.dbf
-    ## │       ├── wwf_cerrado.prj
-    ## │       ├── wwf_cerrado.shp
-    ## │       └── wwf_cerrado.shx
+    ## │   ├── ecoregions
+    ## │   │   ├── wwf_cerrado.dbf
+    ## │   │   ├── wwf_cerrado.prj
+    ## │   │   ├── wwf_cerrado.shp
+    ## │   │   └── wwf_cerrado.shx
+    ## │   ├── landform_richness.tif
+    ## │   ├── landform_types_Brazil.tif
+    ## │   └── landform_variety_Brazil.tif
     ## └── rgee.R
