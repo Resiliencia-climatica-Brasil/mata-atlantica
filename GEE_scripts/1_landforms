@@ -228,6 +228,6 @@ Export.image.toDrive({
   description: 'landform_richness_baf',
   scale: 92.76624,
   region: baf,
-  maxPixels: 1178624880
+  maxPixels: 10485760
 });
 
