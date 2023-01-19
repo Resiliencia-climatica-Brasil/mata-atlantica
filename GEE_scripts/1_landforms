@@ -220,7 +220,8 @@ Map.addLayer(landform_types.sldStyle(sld_intervals), {});
 
 //print(slope.reduceRegion(ee.Reducer.first(), ee.Geometry.Point([-49.71676, -15.54498])))
 
-
+// Create a geometry representing an export region.
+var geometry = ee.Geometry.Rectangle([116.2621, 39.8412, 116.4849, 40.01236]);
 
 Export.image.toDrive({
   image: landform_richness,
