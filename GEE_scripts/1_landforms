@@ -455,7 +455,8 @@ Export.image.toDrive({
   maxPixels:  656402880
 });
 
-
+// Create a geometry representing an export region.
+var geometry = ee.Geometry.Rectangle([-75, -34, -34, 5]);
 
 var wetland = ee.Geometry.Polygon(
           [[[-51.022422307128906, -12.402070661828706],
@@ -467,8 +468,8 @@ Export.image.toDrive({
   image: landform_types,
   description: 'landform_types_wetland',
   scale: 92.76624,
-  region: wetland,
-  maxPixels:  656402880
+  region: geometry,
+  maxPixels: 2426298114
 });
 
 var hilltops = ee.Geometry.Polygon(
