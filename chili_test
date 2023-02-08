@@ -36,5 +36,5 @@ Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili');
 Map.addLayer(aspect, aspect_vis, 'aspect_raw');
 
 Map.addLayer(aspect_classes, {min: 1, max: 2}, 'aspect');
-Map.centerObject(caparaoh, 8)
+Map.centerObject(caparaoh, 12)
 
