@@ -30,10 +30,11 @@ classified CHILI using 0-1 scale. I convert their thresholds
 to 0-255 linearly.
 */
 print(chili_classes)
+
 var chili_classes = chili
-      .where(aspect.gt(195.585).and(aspect.lte(255), 2) // warm
-      .where(aspect.lt(114.24).and(aspect.lte(195.585), 1) // cool
-      .where(aspect.gte(114.24).and(aspect.lte(195.585)), 0); // neutral
+      .where(aspect.gt(195.585).and(aspect.lte(255)), 2) // warm
+      .where(aspect.lt(114.24).and(aspect.lte(195.585)), 1) // cool
+      //.where(aspect.gte(114.24).and(aspect.lte(195.585)), 0); // neutral
 
 
 Map.setCenter(-60.284, 4.626, 11);
