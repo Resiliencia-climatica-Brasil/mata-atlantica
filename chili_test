@@ -1,7 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var caparaoh = /* color: #d63000 */ee.Geometry.Point([-41.79064932159616, -20.431208570078876]),
     aspect_vis = {"opacity":1,"bands":["aspect"],"min":1,"max":2,"palette":["0ec7ff","ffbc83"]},
-    uc = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/UC");
+    uc = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/UC"),
+    aspect_vis4 = {"opacity":1,"bands":["aspect"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var DEM = ee.Image("MERIT/DEM/v1_0_3");
 
@@ -38,11 +39,11 @@ var chili_classes = chili
 Map.setCenter(-60.284, 4.626, 11);
 
 Map.addLayer(aspect, {}, 'aspect_raw', false);
-Map.addLayer(aspect_classes, aspect_vis, 'aspect');
-Map.addLayer(aspect_classes_4, aspect_vis, 'aspect_4');
+Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
+Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4');
 Map.addLayer(chili, {}, 'chili_raw', false);
-Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili', false);
-Map.addLayer(uc,,"UC");
+Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili');
+Map.addLayer(uc,{},"UC");
 
 
 Map.centerObject(caparaoh, 9)
