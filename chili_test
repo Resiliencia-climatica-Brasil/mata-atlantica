@@ -42,7 +42,7 @@ Map.addLayer(aspect_classes, aspect_vis, 'aspect');
 Map.addLayer(aspect_classes_4, aspect_vis, 'aspect_4');
 Map.addLayer(chili, {}, 'chili_raw', false);
 Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili', false);
-Map.addLayer(uc,{},"UC");
+Map.addLayer(uc,,"UC");
 
 
 Map.centerObject(caparaoh, 9)
