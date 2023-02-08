@@ -34,7 +34,7 @@ print(chili_classes)
 var chili_classes = chili
       .where(aspect.gt(195.585).and(aspect.lte(255)), 2) // warm
       .where(aspect.lt(114.24).and(aspect.lte(195.585)), 1) // cool
-      //.where(aspect.gte(114.24).and(aspect.lte(195.585)), 0); // neutral
+      .where(aspect.gte(114.24).and(aspect.lte(195.585)), 0); // neutral
 
 
 Map.setCenter(-60.284, 4.626, 11);
@@ -43,7 +43,7 @@ Map.addLayer(aspect, {}, 'aspect_raw', false);
 Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
 Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4');
 Map.addLayer(chili, {}, 'chili_raw', false);
-Map.addLayer(chili_classes, {}, 'chili_4');
+Map.addLayer(chili_classes, aspect_vis4, 'chili_4');
 Map.addLayer(uc,{},"UC");
 
 
