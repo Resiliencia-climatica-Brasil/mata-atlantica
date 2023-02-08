@@ -36,5 +36,5 @@ Map.addLayer(chili, {}, 'chili_raw', false);
 Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili', false);
 
 
-Map.centerObject(caparaoh, 12)
+Map.centerObject(caparaoh, 9)
 
