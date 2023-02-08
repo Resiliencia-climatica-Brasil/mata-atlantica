@@ -34,7 +34,8 @@ CHILI values range from 0 to 255, but in the paper they
 classified CHILI using 0-1 scale. I convert their thresholds 
 to 0-255 linearly.
 */
-var chili_extrema = chili.reduce(ee.Reducer.minMax());
+var chili_extrema = chili.reduceRegion(reduce(Reducer.minMax()
+
 print(chili_extrema)
 
 var chili_classes = chili
