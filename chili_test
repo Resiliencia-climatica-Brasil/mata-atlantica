@@ -35,7 +35,7 @@ classified CHILI using 0-1 scale. I convert their thresholds
 to 0-255 linearly.
 */
 var chili_extrema = chili.reduce(ee.Reducer.minMax());
-print(chili)
+print(chili_extrema)
 
 var chili_classes = chili
       .where(chili.gte(0).and(chili.lt(114.24)), 0) // cool
