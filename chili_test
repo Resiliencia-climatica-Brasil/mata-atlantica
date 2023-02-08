@@ -1,0 +1,34 @@
+
+var DEM = ee.Image("MERIT/DEM/v1_0_3");
+
+var aspect = ee.Terrain.aspect(DEM);
+
+var chili = ee.Image("CSP/ERGo/1_0/Global/ALOS_CHILI");
+
+
+
+var aspect_classes = aspect
+      .where(aspect.gte(0).and(aspect.lte(90)), 2) // warm
+      .where(aspect.gt(90).and(aspect.lte(270)), 1) // cool
+      .where(aspect.gt(270).and(aspect.lte(360)), 2); // warm
+
+/*
+CHILI values range from 0 to 255, but in the paper they
+classified CHILI using 0-1 scale. I convert their thresholds 
+to 0-255 linearly.
+*/
+
+var chili_classes = chili
+      .where(aspect.gt(195.585), 2) // warm
+      .where(aspect.lt(114.24), 1) // cool
+      .where(aspect.gte(114.24).and(aspect.lte(195.585)), 0); // neutral
+
+
+Map.setCenter(-60.284, 4.626, 11);
+
+Map.addLayer(chili, {}, 'chili_raw');
+Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili');
+
+Map.addLayer(aspect_classes, {min: 1, max: 2}, 'aspect');
+
+
