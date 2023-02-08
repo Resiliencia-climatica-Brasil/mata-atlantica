@@ -30,11 +30,11 @@ var chili_classes = chili
 
 Map.setCenter(-60.284, 4.626, 11);
 
-Map.addLayer(chili, {}, 'chili_raw');
-Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili');
-
 Map.addLayer(aspect, aspect_vis, 'aspect_raw');
+Map.addLayer(aspect_classes, {min: 1, max: 2}, 'aspect', false);
+Map.addLayer(chili, {}, 'chili_raw', false);
+Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili', false);
 
-Map.addLayer(aspect_classes, {min: 1, max: 2}, 'aspect');
+
 Map.centerObject(caparaoh, 12)
 
