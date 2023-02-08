@@ -2,7 +2,8 @@
 var caparaoh = /* color: #d63000 */ee.Geometry.Point([-41.79064932159616, -20.431208570078876]),
     aspect_vis = {"opacity":1,"bands":["aspect"],"min":1,"max":2,"palette":["0ec7ff","ffbc83"]},
     uc = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/UC"),
-    aspect_vis4 = {"opacity":1,"bands":["aspect"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]};
+    aspect_vis4 = {"opacity":1,"bands":["aspect"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]},
+    chil4 = {"opacity":1,"bands":["constant"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var DEM = ee.Image("MERIT/DEM/v1_0_3");
 
@@ -20,8 +21,8 @@ var aspect_classes = aspect
 var aspect_classes_4 = aspect
       .where(aspect.gte(0).and(aspect.lte(45)), 0) // north
       .where(aspect.gt(45).and(aspect.lte(135)), 1) // east
-      .where(aspect.gt(135).and(aspect.lte(225)), 3) // south
-      .where(aspect.gt(225).and(aspect.lte(315)), 4) // west
+      .where(aspect.gt(135).and(aspect.lte(225)), 2) // south
+      .where(aspect.gt(225).and(aspect.lte(315)), 3) // west
       .where(aspect.gt(315).and(aspect.lte(360)), 0); // north again
 
 /*
@@ -34,17 +35,17 @@ print(chili)
 var chili_classes = chili
       .where(chili.gte(0).and(chili.lt(114.24)), 0) // cool
       .where(chili.gte(114.24).and(chili.lt(195.585)), 1) // neutral
-      .where(chili.gte(195.585)), 1) // warm
+      .where(chili.gte(195.585), 2) // warm
 print(chili_classes)
 
 Map.setCenter(-60.284, 4.626, 11);
 var pal = ("ffc978","0eff15","ff6c25","3b8722")
-Map.addLayer(aspect, {}, 'aspect_raw', false);
-Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
+//Map.addLayer(aspect, {}, 'aspect_raw', false);
+//Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
 Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4');
 Map.addLayer(chili, {}, 'chili_raw', false);
-Map.addLayer(chili_classes, {}, 'chili_4');
-Map.addLayer(uc,{},"UC");
+Map.addLayer(chili_classes, chil4, 'chili_4');
+Map.addLayer(uc,{},"UC",true, 0.2);
 
 
 Map.centerObject(caparaoh, 9)
