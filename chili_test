@@ -32,9 +32,9 @@ to 0-255 linearly.
 print(chili)
 
 var chili_classes = chili
-      .where(chili.gte(195.585).and(chili.lte(255)), 2) // warm
-      .where(chili.lt(114.24).and(chili.lte(195.585)), 1) // cool
-      .where(chili.gte(114.24).and(chili.lte(195.585)), 0); // neutral
+      .where(chili.gte(0).and(chili.lt(114.24)), 0) // cool
+      .where(chili.gte(114.24).and(chili.lt(195.585)), 1) // neutral
+      .where(chili.gte(195.585)), 1) // warm
 print(chili_classes)
 
 Map.setCenter(-60.284, 4.626, 11);
