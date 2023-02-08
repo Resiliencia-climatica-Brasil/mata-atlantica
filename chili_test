@@ -35,7 +35,7 @@ var chili_classes = chili
       .where(chili.gt(195.585).and(chili.lte(255)), 2) // warm
       .where(chili.lt(114.24).and(chili.lte(195.585)), 1) // cool
       .where(chili.gte(114.24).and(chili.lte(195.585)), 0); // neutral
-
+print(chili_classes)
 
 Map.setCenter(-60.284, 4.626, 11);
 var pal = ("ffc978","0eff15","ff6c25","3b8722")
