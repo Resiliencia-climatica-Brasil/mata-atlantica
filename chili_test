@@ -29,7 +29,7 @@ CHILI values range from 0 to 255, but in the paper they
 classified CHILI using 0-1 scale. I convert their thresholds 
 to 0-255 linearly.
 */
-print(chili_classes)
+print(chili)
 
 var chili_classes = chili
       .where(chili.gt(195.585).and(chili.lte(255)), 2) // warm
