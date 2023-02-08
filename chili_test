@@ -32,7 +32,7 @@ to 0-255 linearly.
 print(chili)
 
 var chili_classes = chili
-      .where(chili.gt(195.585).and(chili.lte(255)), 2) // warm
+      .where(chili.gte(195.585).and(chili.lte(255)), 2) // warm
       .where(chili.lt(114.24).and(chili.lte(195.585)), 1) // cool
       .where(chili.gte(114.24).and(chili.lte(195.585)), 0); // neutral
 print(chili_classes)
