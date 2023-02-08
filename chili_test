@@ -42,7 +42,7 @@ Map.addLayer(aspect, {}, 'aspect_raw', false);
 Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
 Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4');
 Map.addLayer(chili, {}, 'chili_raw', false);
-Map.addLayer(chili_classes, {min: 0, max: 2}, 'chili');
+Map.addLayer(chili_classes, aspect_vis4, 'chili');
 Map.addLayer(uc,{},"UC");
 
 
