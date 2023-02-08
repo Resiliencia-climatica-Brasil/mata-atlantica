@@ -32,9 +32,9 @@ to 0-255 linearly.
 print(chili_classes)
 
 var chili_classes = chili
-      .where(constant.gt(195.585).and(constant.lte(255)), 2) // warm
-      .where(constant.lt(114.24).and(constant.lte(195.585)), 1) // cool
-      .where(constant.gte(114.24).and(constant.lte(195.585)), 0); // neutral
+      .where(chili.gt(195.585).and(chili.lte(255)), 2) // warm
+      .where(chili.lt(114.24).and(chili.lte(195.585)), 1) // cool
+      .where(chili.gte(114.24).and(chili.lte(195.585)), 0); // neutral
 
 
 Map.setCenter(-60.284, 4.626, 11);
@@ -43,7 +43,7 @@ Map.addLayer(aspect, {}, 'aspect_raw', false);
 Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
 Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4');
 Map.addLayer(chili, {}, 'chili_raw', false);
-Map.addLayer(chili_classes, {min:0, max:2, palette:pal}, 'chili_4');
+Map.addLayer(chili_classes, {}, 'chili_4');
 Map.addLayer(uc,{},"UC");
 
 
