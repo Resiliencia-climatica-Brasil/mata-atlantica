@@ -4,8 +4,10 @@ var caparaoh = /* color: #d63000 */ee.Geometry.Point([-41.79064932159616, -20.43
     uc = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/UC"),
     aspect_vis4 = {"opacity":1,"bands":["aspect"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]},
     chil4 = {"opacity":1,"bands":["constant"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]},
-    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint(),
-    brasil = ee.FeatureCollection("users/andreasancheztapia/BRA_adm1");
+    poco_das_antas = /* color: #98ff00 */ee.Geometry.Point([-42.27821021619612, -22.543782184905023]),
+    brasil = ee.FeatureCollection("users/andreasancheztapia/BRA_adm1"),
+    jurubatiba = /* color: #d63000 */ee.Geometry.Point([-41.50504737439925, -22.205035853627777]),
+    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var DEM = ee.Image("MERIT/DEM/v1_0_3").clip(brasil);
 
@@ -61,5 +63,5 @@ Map.addLayer(uc,{},"UC",true, 0.2);
 Map.centerObject(caparaoh, 9)
 
 //chili.aggregate_histogram("constant")
-var hist = ui.Chart.image.histogram({image:chili, region:brasil, scale: 90, maxPixels:1085206752})
+var hist = ui.Chart.image.histogram({image:chili, region:brasil, scale: 200, maxPixels:1085206752})
 print(hist)
