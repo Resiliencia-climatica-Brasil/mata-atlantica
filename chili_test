@@ -35,8 +35,9 @@ classified CHILI using 0-1 scale. I convert their thresholds
 to 0-255 linearly.
 */
 var chili_extrema = chili.reduceRegion({
-  reducer: ee.Reducer.median(),
-  geometry: brasil
+  reducer: ee.Reducer.maxmin(),
+  geometry: brasil,
+  bestEffort:true
   })
 
 print(chili_extrema)
