@@ -37,7 +37,7 @@ to 0-255 linearly.
 var chili_extrema = chili.reduceRegion({
   reducer: ee.Reducer.median(),
   geometry: brasil
-  )
+  })
 
 print(chili_extrema)
 
