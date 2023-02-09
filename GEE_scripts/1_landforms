@@ -427,7 +427,7 @@ Export.image.toDrive({
   region: bioma,
   maxPixels: 5072319225
 });
-
+/*
 Export.image.toAsset({
   image: landform_types,
   description: 'Brazil_landform_types',
@@ -437,4 +437,4 @@ Export.image.toAsset({
   region: bioma,
   maxPixels: 5072319225
 });
-
+*/
