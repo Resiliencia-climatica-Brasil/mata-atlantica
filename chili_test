@@ -33,13 +33,14 @@ classified CHILI using 0-1 scale. I convert their thresholds
 to 0-255 linearly.
 */
 //queria ver os extremos de chili para só dentro do brasil. continua sendo 0-254 então o clip não adianta
+/*
 var chili_extrema = chili.reduceRegion({
   reducer: ee.Reducer.minMax(),
   geometry: brasil,
   bestEffort:true
-  })
-
+  })^
 print(chili_extrema)
+*/
 
 var chili_classes = chili
       .where(chili.gte(0).and(chili.lt(114.24)), 0) // cool
@@ -60,4 +61,4 @@ Map.addLayer(uc,{},"UC",true, 0.2);
 Map.centerObject(caparaoh, 9)
 
 //chili.aggregate_histogram("constant")
-ui.Chart.image.histogram({image:chili, geometry:brasil}, bestEffort:true)
+ui.Chart.image.histogram({image:chili, region:brasil})
