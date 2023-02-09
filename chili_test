@@ -63,3 +63,10 @@ Map.centerObject(caparaoh, 9)
 //chili.aggregate_histogram("constant")
 var hist = ui.Chart.image.histogram({image:chili, region:brasil, scale: 200, maxPixels:1085206752})
 print(hist)
+
+Export.image.toDrive({
+  image: chili,
+  description: 'chili_test',
+  scale: 92.76624,
+  region: brasil,
+  maxPixels: 631694547 });
