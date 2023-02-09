@@ -193,7 +193,7 @@ var moisture_classes = moisture_index
       .where(moisture_index.lte(3000), 0) //1200
       .where(moisture_index.gt(3000), 1); // moist areas
 
-moisture_classes = moisture_classes.add(water);
+//moisture_classes = moisture_classes.add(water);
 moisture_classes = moisture_classes
                    .where(moisture_classes.gte(1), 1)
                    .where(moisture_classes.lt(1), 0)
