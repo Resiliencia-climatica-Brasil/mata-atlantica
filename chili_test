@@ -14,7 +14,7 @@ var DEM = ee.Image("MERIT/DEM/v1_0_3").clip(brasil);
 var aspect = ee.Terrain.aspect(DEM).clip(brasil);
 
 var chili = ee.Image("CSP/ERGo/1_0/Global/ALOS_CHILI")
-  .reproject('EPSG:4326', null, 92.76624232772798);
+  .reproject('EPSG:4326', null, 92.76624232772798)
   .clip(brasil)
   .select('constant');
 
