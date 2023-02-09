@@ -15,8 +15,6 @@ var chili = ee.Image("CSP/ERGo/1_0/Global/ALOS_CHILI")
   .clip(brasil)
   .select('constant');
 
-
-
 var aspect_classes = aspect
       .where(aspect.gte(0).and(aspect.lte(90)), 2) // warm
       .where(aspect.gt(90).and(aspect.lte(270)), 1) // cool
@@ -34,6 +32,7 @@ CHILI values range from 0 to 255, but in the paper they
 classified CHILI using 0-1 scale. I convert their thresholds 
 to 0-255 linearly.
 */
+//queria ver os extremos de chili para só dentro do brasil. continua sendo 0-254 então o clip não adianta
 var chili_extrema = chili.reduceRegion({
   reducer: ee.Reducer.minMax(),
   geometry: brasil,
