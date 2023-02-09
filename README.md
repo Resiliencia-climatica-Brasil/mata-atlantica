@@ -20,14 +20,15 @@ carried out by The Nature Conservancy Brazil and collaborators
   - `landform_richness.tif`
   - `wetlands_density.tif`
   - `soil_diversity.tif`
-- (Download the data? How?!) GEE saves to Gdrive.
-- Execute [`6_Z_values.R`](R_scripts/6_Z_values.R). Should create Z
+- To download the data: GEE saves to Gdrive (for now). Download
+  automatically with [6_g\_drive](R_scripts/6_g_drive)
+- Execute [`7_Z_values.R`](R_scripts/7_Z_values.R). Should create Z
   value rasters in `./processed_data/z_values`
 - Execute
-  [`7_landscape_diversity.R`](R_scripts/7_landscape_diversity.R). Takes
+  [`8_landscape_diversity.R`](R_scripts/8_landscape_diversity.R). Takes
   Z rasters and creates `landscape_diversity.tif`.
 - Figures created by
-  [`8_Figures_landscape_diversity_maps.R`](R_scripts/8_Figures_landscape_diversity_maps.R)
+  [`9_Figures_landscape_diversity_maps.R`](R_scripts/9_Figures_landscape_diversity_maps.R)
 
 ## File structure
 
@@ -45,15 +46,16 @@ fs::dir_tree()
     ## ├── README.Rmd
     ## ├── README.md
     ## ├── R_scripts
+    ## │   ├── 10_validation.R
     ## │   ├── 1_Download_Bioma_IBGE.R
     ## │   ├── 2_Download_Carta_Geologica_IBGE.R
     ## │   ├── 3_Downloading_ecoregions.R
     ## │   ├── 4_Downloading_IBGE_Solo.R
     ## │   ├── 5_Filter_Biome.R
-    ## │   ├── 6_Z_values.R
-    ## │   ├── 7_landscape_diversity.R
-    ## │   ├── 8_Figures_landscape_diversity_maps.R
-    ## │   └── 9_validation.R
+    ## │   ├── 6_g_drive.R
+    ## │   ├── 7_Z_values.R
+    ## │   ├── 8_landscape_diversity.R
+    ## │   └── 9_Figures_landscape_diversity_maps.R
     ## ├── climate_resilience.Rproj
     ## ├── data
     ## │   ├── bioma
@@ -138,6 +140,20 @@ fs::dir_tree()
     ## │           │   ├── pedo_ponto.shp
     ## │           │   └── pedo_ponto.shx
     ## │           └── pedo_ponto.zip
+    ## ├── drive_data
+    ## │   ├── Brazil_landform_types_1
+    ## │   ├── Brazil_landform_types_2
+    ## │   ├── Brazil_landform_types_3
+    ## │   ├── Brazil_landform_types_4
+    ## │   ├── Brazil_landform_types_5
+    ## │   ├── Brazil_landform_types_6
+    ## │   ├── Brazil_landform_types_7
+    ## │   ├── Brazil_landform_types_8
+    ## │   ├── Brazil_landform_types_9
+    ## │   ├── landform_variety_1
+    ## │   ├── landform_variety_2
+    ## │   ├── landform_variety_3
+    ## │   └── landform_variety_4
     ## ├── processed_data
     ## │   ├── bioma
     ## │   │   ├── baf.dbf
@@ -151,5 +167,6 @@ fs::dir_tree()
     ## │   │   └── wwf_cerrado.shx
     ## │   ├── landform_richness.tif
     ## │   ├── landform_types_Brazil.tif
+    ## │   ├── landform_variety
     ## │   └── landform_variety_Brazil.tif
     ## └── rgee.R
