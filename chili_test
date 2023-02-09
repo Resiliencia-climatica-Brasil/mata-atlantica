@@ -59,5 +59,5 @@ Map.addLayer(uc,{},"UC",true, 0.2);
 
 Map.centerObject(caparaoh, 9)
 
-chili.aggregate_histogram("constant")
-ui.Chart.image.histogram(chili)
+//chili.aggregate_histogram("constant")
+ui.Chart.image.histogram(chili, brasil)
