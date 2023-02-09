@@ -326,7 +326,7 @@ Map.addLayer(landform_types.reproject('EPSG:4326', null, 92.76624).sldStyle(sld_
 
 Map.addLayer(landform_types.reproject('EPSG:4326', null, 92.76624))
 
-Map.addLayer(water, {min: 0, max: 1}, 'water')
+//Map.addLayer(water, {min: 0, max: 1}, 'water')
 
 /* Print plot scale*/
 print(Map.getScale())
