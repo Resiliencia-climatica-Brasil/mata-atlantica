@@ -12,23 +12,27 @@ carried out by The Nature Conservancy Brazil and collaborators
 
 ## Workflow
 
-- Execute R_scripts that start with `1_` to `4_Download`, then
-  `5_Filter_Biome.R` (run for Cerrado and Caatinga)
+- Execute R_scripts that start with `01_` to `04_Download`, then
+  `05_Filter_Biome.R` (run for Cerrado and Caatinga)
 - (Upload the data, How?!) Manually to `assets`
-- Execute GEE scripts. Should create:
+- Execute the scripts in **`/GEE scripts`** inside GEE. They should
+  create:
   - `elevation_range_residual.tif`
   - `landform_richness.tif`
   - `wetlands_density.tif`
-  - `soil_diversity.tif`
-- To download the data: GEE saves to Gdrive (for now). Download
-  automatically with [6_g\_drive](R_scripts/6_g_drive)
-- Execute [`7_Z_values.R`](R_scripts/7_Z_values.R). Should create Z
+  - `soil_diversity.tif`  
+    **GEE saves to Gdrive**
+- Download the data from GDrive with
+  [`06_g_drive.R`](R_scripts/06_g_drive) to `/drive_data` (not
+  uploaded).
+- Execute [`07_Z_values.R`](R_scripts/07_Z_values.R). Should create Z
   value rasters in `./processed_data/z_values`
 - Execute
-  [`8_landscape_diversity.R`](R_scripts/8_landscape_diversity.R). Takes
-  Z rasters and creates `landscape_diversity.tif`.
+  [`08_landscape_diversity.R`](R_scripts/08_landscape_diversity.R).
+  Takes Z rasters and creates
+  `./processed_data/landscape_diversity.tif`.
 - Figures created by
-  [`9_Figures_landscape_diversity_maps.R`](R_scripts/9_Figures_landscape_diversity_maps.R)
+  [`09_Figures_landscape_diversity_maps.R`](R_scripts/09_Figures_landscape_diversity_maps.R)
 
 ## File structure
 
@@ -46,16 +50,16 @@ fs::dir_tree()
     ## ├── README.Rmd
     ## ├── README.md
     ## ├── R_scripts
-    ## │   ├── 10_validation.R
-    ## │   ├── 1_Download_Bioma_IBGE.R
-    ## │   ├── 2_Download_Carta_Geologica_IBGE.R
-    ## │   ├── 3_Downloading_ecoregions.R
-    ## │   ├── 4_Downloading_IBGE_Solo.R
-    ## │   ├── 5_Filter_Biome.R
-    ## │   ├── 6_g_drive.R
-    ## │   ├── 7_Z_values.R
-    ## │   ├── 8_landscape_diversity.R
-    ## │   └── 9_Figures_landscape_diversity_maps.R
+    ## │   ├── 01_Download_Bioma_IBGE.R
+    ## │   ├── 02_Download_Carta_Geologica_IBGE.R
+    ## │   ├── 03_Downloading_ecoregions.R
+    ## │   ├── 04_Downloading_IBGE_Solo.R
+    ## │   ├── 05_Filter_Biome.R
+    ## │   ├── 06_g_drive.R
+    ## │   ├── 07_Z_values.R
+    ## │   ├── 08_landscape_diversity.R
+    ## │   ├── 09_Figures_landscape_diversity_maps.R
+    ## │   └── 10_validation.R
     ## ├── climate_resilience.Rproj
     ## ├── data
     ## │   ├── bioma
