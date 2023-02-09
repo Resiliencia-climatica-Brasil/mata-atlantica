@@ -1,5 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var caparaoh = /* color: #d63000 */ee.Geometry.Point([-41.79064932159616, -20.431208570078876]),
+var caparaoh = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([-41.79064932159616, -20.431208570078876]),
     aspect_vis = {"opacity":1,"bands":["aspect"],"min":1,"max":2,"palette":["0ec7ff","ffbc83"]},
     uc = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/UC"),
     aspect_vis4 = {"opacity":1,"bands":["aspect"],"max":2,"palette":["ffc978","0eff15","ff6c25","3b8722"]},
@@ -7,7 +10,8 @@ var caparaoh = /* color: #d63000 */ee.Geometry.Point([-41.79064932159616, -20.43
     poco_das_antas = /* color: #98ff00 */ee.Geometry.Point([-42.27821021619612, -22.543782184905023]),
     brasil = ee.FeatureCollection("users/andreasancheztapia/BRA_adm1"),
     jurubatiba = /* color: #d63000 */ee.Geometry.Point([-41.50504737439925, -22.205035853627777]),
-    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint();
+    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint(),
+    chilivis = {"opacity":1,"bands":["constant"],"gamma":0.21500000000000002};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var DEM = ee.Image("MERIT/DEM/v1_0_3").clip(brasil);
 
@@ -56,10 +60,10 @@ var pal = ("ffc978","0eff15","ff6c25","3b8722")
 Map.addLayer(aspect, {}, 'aspect_raw', false);
 Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
 Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4', false);
-Map.addLayer(chili, {}, 'chili_raw', false);
+Map.addLayer(chili, chilivis, 'chili_raw', false);
 Map.addLayer(chili_classes, chil4, 'chili_4');
 Map.addLayer(uc,{},"UC",true, 0.2);
-Map.centerObject(caparaoh, 9)
+Map.centerObject(caparaoh, 10)
 
 //chili.aggregate_histogram("constant")
 //var hist = ui.Chart.image.histogram({image:chili, region:brasil, scale: 200, maxPixels:1085206752})
