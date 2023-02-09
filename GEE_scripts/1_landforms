@@ -77,11 +77,13 @@ taking into account the whole basin flow.
 var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
     .select("upg")
     
+/*
 var water = ee.Image("projects/ee-lucasljardim9/assets/brasil_coverage_2021")
             .reproject('EPSG:4326', null, 92.76624);
 water = water
         .where(water.eq(33), 1)
         .where(water.neq(33), 0);
+*/
 
 /* 
 We calculate relief slopes and aspect based on the DEM. 
