@@ -1,11 +1,33 @@
-var bioma = ee.FeatureCollection("projects/ee-andreasancheztapia/assets/baf");
+/**
+ * This script generates and exports to Google Drive a raster of elevation range at a scale of ~ 90 m for Brazil.  
 
-var dataset = ee.Image("MERIT/DEM/v1_0_3").clip(bioma);
+- Steps to calculate elavation range
+
+1- Calculate elevation range within a neighborhood
+2- Run a regression between elevation range and elevation
+3- Calculate regression residuals
+4- Export results
+*/
+
+/* Import Biome polygons and extract their bounds */
+
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Biome")
+                        .map(function(feature){
+                             return feature.bounds()
+                             })
+                        .geometry()
+                        .dissolve({'maxError': 1})
+                        .bounds();
+                        
+                        
+/* Import DEM */                      
+
+var dataset = ee.Image("MERIT/DEM/v1_0_3");
 
 /*
-Elevation range
+Elevation range is calculated within a neighborhood region
 
-The circle radius was defined by the TNC area, calculating 100 acre backwards to squared meters, than to meters.
+Following TNC, the circle radius was defined as 100 acre, calculated backwards to squared meters, than to meters.
 
 r = (A/pi)^1/2
 
@@ -15,10 +37,12 @@ r = (404686/3.14)^1/2
 */
 
 var r = ee.Number(4046860).divide(ee.Number(Math.PI)).sqrt(); // radius in meters
-print(r)
+
 var radius_pixels = r.divide(ee.Number(90)).round();
 
 var neighbor = dataset.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
+
+/* Calculate elevation range within a neighborhood */ 
 
 var elevation_max = neighbor.reduce(ee.Reducer.max());
 
@@ -29,44 +53,43 @@ var elevation_range = elevation_max.subtract(elevation_min).abs();
 var elevation = ee.Image.cat(dataset, elevation_range)
                  .rename(['elevation', 'elevation_range']);
                  
+/* Elevation versus elevation range regression
+
+Elevation is correlated to elevation range, we calculated a regression and used its residuals to discount
+the effect of elevation on elevation range
+*/
+                 
 var regression = elevation.reduceRegion({
      reducer: ee.Reducer.linearFit(),
      geometry: bioma,
-     maxPixels: 463690740
+     maxPixels: 5072319225,
+     scale: 92.76624
     });
-
+    
+/* Regression prediction */    
+/* Predictor */
 var pred = elevation.select('elevation').multiply(ee.Number(regression.get('scale')));
+
+/* Add intercept to the model prediction */ 
 
 var predict = pred.add(ee.Number(regression.get('offset')));
 
-var residuals = elevation.select('elevation_range').subtract(predict).rename(['residuals']);
-print(residuals)
+/* Calculate residuals */
 
-Map.setCenter(-43, -21, 7);
+var residuals = elevation.select('elevation_range').subtract(predict).rename(['residuals']);
+
+/* Mapping residuals */
+
+Map.setCenter(-40, -8, 7);
 
 Map.addLayer(residuals);
 
-/*
+/* Export image */
+
 Export.image.toDrive({
   image: residuals,
   description: 'elevation_range_residual',
   scale: 92.76624,
   region: bioma,
-  maxPixels: 631694547 });
-
-
-var sample = ee.FeatureCollection.randomPoints({
-               region: bioma,
-               points: 5000
-             });
-             
-var plot_image = ee.Image.cat(residuals, elevation.select('elevation'))
-                 .sampleRegions({collection: sample});  
-
-
-var chart = ui.Chart.feature.byFeature(plot_image, 'elevation', ['residuals'])
-  .setChartType('ScatterChart');
-  
-  print(chart);
-
-*/
+  maxPixels: 5072319225});
+  

@@ -1,40 +1,89 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("projects/ee-lucasljardim9/assets/soil_IBGE");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+/**
+ * This script generates and exports to Google Drive a raster of soil diversity at a scale of ~ 90 m for Brazil.  
+*/
 
-var soil = ee.FeatureCollection("projects/ee-lucasljardim9/assets/soil_IBGE")
-           .select("cod_simbol");
+/* Steps to calculate soil diversity
+
+1- Import soil data
+
+2- Filter soil codes
+
+3- Calculate a raster of soil type presence within a neighborhood
+
+4- Sum the soil presence rasters to create a raster of soil diversity within the neighborhood
+
+5- Export soil diversity data
+
+*/
+
+/**
+ * Function to create a raster indicating the presence of a soil type within a circle kernel of a specific size. 
+ * @param code A character with the soil code.
+ * @results An image of presence and absence of soil type within the neighborhood.
+*/
            
 var soil_presence = function(code){           
-           
+    /* Filter soil type and change the value to 1 */           
     var type = soil.filter(ee.Filter.eq("cod_simbol", code))
               .map(
               function(feature){
                return feature.set("cod_simbol", 1)
               });
-             
-    var soil_raster = type.reduceToImage({
+    /* Transform soil type polygon into raster */
+    
+    var soil_rast = type.reduceToImage({
                         properties: ["cod_simbol"],
                         reducer: ee.Reducer.first()
                       });
-                      
-    var soil_raster = soil_raster
-                      .clip(bioma)
+                     
+    /* Convert projection and rescale soil rasters to the same projection and scale
+       as the other variables
+    */
+    var soil_raster = soil_rast
                       .reproject({crs: "EPSG:4326",
                                   scale: 92.76624});   
+                                  
+    /*
+    The circle radius was defined by the TNC area, calculating 100 acre backwards to squared meters, than to meters.
+    r = (A/pi)^1/2
+    100 acre equal to 404686 squared meters
+    r = (404686/3.14)^1/2
+    */
                                   
     var r = ee.Number(404686).divide(ee.Number(Math.PI)).sqrt() // radius in meters
 
     var radius_pixels = r.divide(ee.Number(90)).round()
-
+    
+    /* Count soil type presence within the cell neighborhood */
+    
     var soil_count = soil_raster.neighborhoodToBands(ee.Kernel.circle(radius_pixels)).reduce(ee.Reducer.count())
-                    
+    
+    /* Create a presence-absence raster. 
+    Counts higher than zero are transformed into one (presence).
+    */
+    
     var soil_diversity = soil_count.where(soil_count.gt(0), 1);    
     
     return soil_diversity;
 
 }
+
+/* Import biome polygons*/
+
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Biome")
+                        .map(function(feature){
+                             return feature.bounds()
+                             })
+                        .geometry()
+                        .dissolve({'maxError': 1})
+                        .bounds();
+                        
+/* Filter soil codes */
+
+var soil = ee.FeatureCollection("projects/ee-lucasljardim9/assets/soil_IBGE")
+           .select("cod_simbol");
+
+/* Create a list of unique soil codes */
 
 var soil_codes = ["AR", "EKg", "LAd", "LVAd",  "RQo", "EKgu", "GXbd", "PVAd",
                   "RYbd", "RLd", "RYve", "GXve", "GXa", "GXbe", "ESKg", "FFc",
@@ -52,20 +101,31 @@ var soil_codes = ["AR", "EKg", "LAd", "LVAd",  "RQo", "EKgu", "GXbd", "PVAd",
                   "NBd", "NBa", "NBaf", "NBdf", "NVa", "CYve", "MEk", "MEo", "PVva", "SXk", "ESo",
                   "MTf"];
                   
+/* Create a raster for each soil type */
+/* A binary raster indicating if there is that soil type within the cell neighborhood*/
 
 var soil_list = soil_codes.map(soil_presence);
 
+/* Sum all binary raster to create the soil diversity within cell neighborhood */
 
 var soil_diversity = ee.ImageCollection.fromImages(soil_list)
                      .toBands()
                      .reduce("sum")
                      .toDouble()
-/*                     
+
+/* Mapping soil diversity */
+
+Map.setCenter(-50, -16, 11);
+
+Map.addLayer(soil_diversity);                     
+
+/* Export soil diversity */
+
 Export.image.toDrive({
   image: soil_diversity,
   description: 'soil_diversity',
   scale: 92.76624,
   region: bioma,
-  maxPixels: 631694567
+  maxPixels: 5072319225
   })
-*/
+

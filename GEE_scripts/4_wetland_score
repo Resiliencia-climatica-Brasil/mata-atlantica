@@ -1,12 +1,23 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var image = ee.Image("projects/ee-lucasljardim9/assets/Cifor_wetlands");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Caatinga");
+/**
+ * This script generates and exports to Google Drive a raster of wetland score at a scale of ~ 90 m for Brazil.  
+*/
+
+/* Import biome polygons and extract their bounds */
+var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Biome")
+                        .map(function(feature){
+                             return feature.bounds()
+                             })
+                        .geometry()
+                        .dissolve({'maxError': 1})
+                        .bounds();
+                        
+/* Import wetland raster from CIFOR database*/                        
+/* Reproject to the same projection as the other variables */
 
 var wetlands = ee.Image("projects/ee-lucasljardim9/assets/Cifor_wetlands")
-               .clip(bioma)
                .reproject({crs: "EPSG:4326",
                            scale: 92.76624});
+/* Transform wetland raster into a binary raster of wetland presence */
 
 var wetlands_binary = wetlands.where(wetlands.gt(0), 1);
 
@@ -21,23 +32,32 @@ r = (A/pi)^1/2
 r = (404686/3.14)^1/2
 */
 
-var r = ee.Number(404686).divide(ee.Number(Math.PI)).sqrt() // radius in meters
+var r = ee.Number(404686).divide(ee.Number(Math.PI)).sqrt(); // radius in meters
 
-var radius_pixels = r.divide(ee.Number(90)).round()
+var radius_pixels = r.divide(ee.Number(90)).round();
 
 var neighbors = wetlands_binary.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
 
+/* Count the amount of wetlands within a cell neighborhood */
+
 var wetlands_count = neighbors.reduce(ee.Reducer.sum()).toDouble();
+
+/* Calculate the number of cells within neighborhood */
 
 var neighbors_amount = neighbors.bandNames().length();
 
+/* Calculate wetland density */
+/* Number of wetlands divided by the number of cells */
+
 var wetlands_density = wetlands_count.divide(ee.Number(neighbors_amount));
+
+/* Replicate the same procedure to a neighborhood of 1000 acres */
 
 // Wetland density 1000 acre
 
 var r = ee.Number(4046860).divide(ee.Number(Math.PI)).sqrt() // radius in meters
 
-var radius_pixels = r.divide(ee.Number(90)).round()
+var radius_pixels = r.divide(ee.Number(90)).round();
 
 var neighbors = wetlands_binary.neighborhoodToBands(ee.Kernel.circle(ee.Number(radius_pixels)));
 
@@ -47,9 +67,17 @@ var neighbors_amount = neighbors.bandNames().length();
 
 var wetlands_density_1000 = wetlands_count.divide(ee.Number(neighbors_amount));
 
+/* Mapping wetland density and patchness */
 
+Map.setCenter(-50, -15, 11);
 
-// Exporting wetlands patchness
+Map.addLayer(wetlands_count);
+
+Map.addLayer(wetlands_density);
+
+Map.addLayer(wetlands_density_1000);
+
+/* Exporting wetlands patchness (number of wetlands within neighborhood) */
 
 Export.image.toDrive({
   image: wetlands_count,
@@ -59,7 +87,7 @@ Export.image.toDrive({
   maxPixels: 631694567
 });
 
-// Wetlands density
+// Wetlands density at 100 and 1000 acres
 
 Export.image.toDrive({
   image: wetlands_density,
@@ -77,12 +105,3 @@ Export.image.toDrive({
   maxPixels: 631694567
 });
 
-//var freq = wetlands_count.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: bioma, maxPixels: 232845367});
-
-//print(freq)
-            
-/*
-Map.setCenter(-50, -15, 7);
-
-Map.addLayer(wetlands_count);
-*/
