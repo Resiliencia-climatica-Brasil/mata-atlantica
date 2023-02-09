@@ -61,5 +61,5 @@ Map.addLayer(uc,{},"UC",true, 0.2);
 Map.centerObject(caparaoh, 9)
 
 //chili.aggregate_histogram("constant")
-var hist = ui.Chart.image.histogram({image:chili, region:brasil, maxPixels:1085206752})
+var hist = ui.Chart.image.histogram({image:chili, region:brasil, scale: 90, maxPixels:1085206752})
 print(hist)
