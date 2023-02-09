@@ -52,7 +52,7 @@ Map.setCenter(-60.284, 4.626, 11);
 var pal = ("ffc978","0eff15","ff6c25","3b8722")
 Map.addLayer(aspect, {}, 'aspect_raw', false);
 Map.addLayer(aspect_classes, aspect_vis, 'aspect', false);
-Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4');
+Map.addLayer(aspect_classes_4, aspect_vis4, 'aspect_4', false);
 Map.addLayer(chili, {}, 'chili_raw', false);
 Map.addLayer(chili_classes, chil4, 'chili_4');
 Map.addLayer(uc,{},"UC",true, 0.2);
