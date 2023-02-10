@@ -44,15 +44,7 @@ var wetlands_count = neighbors.reduce(ee.Reducer.sum()).toDouble();
 
 var neighbors_amount = neighbors.bandNames().length();
 
-print(r)
-print(radius_pixels)
-Map.addLayer(bioma, {}, "bioma", false)                        
-Map.addLayer(wetlands, {}, "wetlands")   
-Map.addLayer(wetlands_binary, {}, "wetlands_bin")  
-Map.addLayer(neighbors, {}, "neigh")  
-Map.addLayer(wetlands_count, {}, "wet_count")  
-Map.addLayer(neighbors_amount, {}, "neigh_count")  
-/*
+
 // Calculate wetland density
 // Number of wetlands divided by the number of cells
 
@@ -86,7 +78,7 @@ Map.addLayer(wetlands_density_1000);
                         
 
 // Exporting wetlands patchiness (number of wetlands within neighborhood) 
-
+/*
 Export.image.toDrive({
   image: wetlands_count,
   description: 'wetlands_patchiness',
@@ -94,7 +86,7 @@ Export.image.toDrive({
   region: bioma,
   maxPixels: 631694567
 });
-
+*/
 // Wetlands density at 100 and 1000 acres
 
 Export.image.toDrive({
@@ -102,7 +94,7 @@ Export.image.toDrive({
   description: 'wetlands_density',
   scale: 92.76624,
   region: bioma,
-  maxPixels: 631694567
+  maxPixels: 2536236638
 });
 
 Export.image.toDrive({
@@ -110,7 +102,19 @@ Export.image.toDrive({
   description: 'wetlands_density_1000',
   scale: 92.76624,
   region: bioma,
-  maxPixels: 631694567
+  maxPixels: 2536236638
 });
 
+
+/*
+print(r, "r")
+print(radius_pixels, "radius pixels")
+Map.addLayer(bioma, {}, "bioma", false)
+Map.addLayer(wetlands, {}, "wetlands", false)
+Map.addLayer(wetlands_binary, {}, "wetlands_bin", false)
+Map.addLayer(neighbors, {}, "neigh", false)
+Map.addLayer(wetlands_count, {}, "wet_count", false)
+print(neighbors_amount, "neigh amount")
+Map.addLayer(wetlands_density,{} ,"wdens")
+Map.addLayer(wetlands_density_1000,{} ,"wdens_1000")
 */
