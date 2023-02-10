@@ -67,7 +67,7 @@ var neighbors_amount = neighbors.bandNames().length();
 
 var wetlands_density_1000 = wetlands_count.divide(ee.Number(neighbors_amount));
 
-/* Mapping wetland density and patchness */
+/* Mapping wetland density and patchiness */
 
 Map.setCenter(-50, -15, 11);
 
@@ -77,11 +77,11 @@ Map.addLayer(wetlands_density);
 
 Map.addLayer(wetlands_density_1000);
 
-/* Exporting wetlands patchness (number of wetlands within neighborhood) */
+/* Exporting wetlands patchiness (number of wetlands within neighborhood) */
 
 Export.image.toDrive({
   image: wetlands_count,
-  description: 'wetlands_patchness',
+  description: 'wetlands_patchiness',
   scale: 92.76624,
   region: bioma,
   maxPixels: 631694567
