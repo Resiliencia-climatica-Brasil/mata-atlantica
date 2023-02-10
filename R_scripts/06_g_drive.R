@@ -4,7 +4,7 @@ library(googledrive)
 googledrive::drive_auth() #dar acessso desde o navegador
 
 ## Criando a pasta para não sobreescrever processed_data:----
-dir.create("drive_data/landform_variety", recursive = TRUE)
+dir.create("drive_data")
 
 
 ## Look up landform variety and download by id----

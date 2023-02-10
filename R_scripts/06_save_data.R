@@ -1,0 +1,73 @@
+# Creates a mosaic from the data saved from GDrive and saves them to /processed_data 
+# Processed_data also needs to be ignored by git!
+library(terra)
+library(tictoc)
+# landform types -----
+files <- list.files("drive_data", full.names = T, pattern = "landform_types")
+all_stack <- purrr::map(files, terra::rast)
+
+tic()
+Landform_types <- mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]],
+  all_stack[[5]],
+  all_stack[[6]],
+  all_stack[[7]],
+  all_stack[[8]],
+  all_stack[[9]]
+)
+toc()
+terra::writeRaster(Landform_types, filename = "processed_data/landform_types.tif" )
+
+# landform variety-----
+files <- list.files("drive_data", full.names = T, pattern = "landform_variety")
+all_stack <- purrr::map(files, terra::rast)
+
+Landform_var <- mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]]
+)
+
+terra::writeRaster(Landform_var, filename = "processed_data/landform_variety.tif" )
+
+# elevation range residual-----
+files <- list.files("drive_data", full.names = T, pattern = "elevation_range_residual")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+elev <- mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]],
+  all_stack[[5]],
+  all_stack[[6]],
+  all_stack[[7]],
+  all_stack[[8]],
+  all_stack[[9]]
+)
+toc()
+terra::writeRaster(elev, filename = "processed_data/elevation_range.tif" )
+
+
+# soil diversity-----
+files <- list.files("drive_data", full.names = T, pattern = "soil_diversity")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+soil_div <- mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]],
+  all_stack[[5]],
+  all_stack[[6]],
+  all_stack[[7]],
+  all_stack[[8]],
+  all_stack[[9]]
+)
+toc()
+terra::writeRaster(soil_div, filename = "processed_data/soil_diversity.tif", overwrite = TRUE)
+
