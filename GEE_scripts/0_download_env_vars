@@ -1,0 +1,1 @@
+var DEM = ee.Image("MERIT/DEM/v1_0_3");
