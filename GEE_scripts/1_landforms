@@ -463,7 +463,7 @@ Export.image.toDrive({
 });
 Export.image.toDrive({
   image: aspect,
-  description: 'Brazil_slope',
+  description: 'Brazil_aspect',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
