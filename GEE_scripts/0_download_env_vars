@@ -1,4 +1,0 @@
-var DEM = ee.Image("MERIT/DEM/v1_0_3");
-var slope = 
-var flow_accumulation = ee.Image("MERIT/Hydro/v1_0_1")
-    .select("upg")
