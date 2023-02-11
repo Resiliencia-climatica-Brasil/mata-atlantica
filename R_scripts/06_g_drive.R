@@ -4,7 +4,7 @@ library(googledrive)
 googledrive::drive_auth() #dar acessso desde o navegador
 
 ## Criando a pasta para não sobreescrever processed_data:----
-dir.create("drive_data")
+#dir.create("drive_data")#run only once
 
 
 ## Look up landform variety and download by id----
@@ -24,5 +24,8 @@ download_results("Brazil_landform_types")
 download_results("elevation_range_residual")
 download_results("soil_diversity")
 # aqui falta agua pelo asset do Lucas. ----
+drive_find("wetlands")
+download_results("wetlands_density-")#o tracinho é para diferenciar de _1000
+download_results("wetlands_density_1000")
 
 # NOTE: We have to ignore this folder to avoid UPLOADING back to GEE. It will kill our quota. 

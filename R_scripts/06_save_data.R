@@ -80,3 +80,44 @@ terra::writeRaster(soil_div,
                    filename = "processed_data/soil_diversity.tif",
                    overwrite = TRUE)
 
+# wetlands------
+files <- list.files("drive_data", full.names = T, pattern = "wetlands_density-")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+wet_div <- mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]],
+  all_stack[[5]],
+  all_stack[[6]],
+  all_stack[[7]],
+  all_stack[[8]],
+  all_stack[[9]]
+)
+toc()
+terra::writeRaster(wet_div,
+                   filename = "processed_data/wetlands_density.tif",
+                   overwrite = TRUE)
+
+
+# wetlands 1000------
+files <- list.files("drive_data", full.names = T, pattern = "wetlands_density_1000")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+wet_div_1000 <- mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]],
+  all_stack[[5]],
+  all_stack[[6]],
+  all_stack[[7]],
+  all_stack[[8]],
+  all_stack[[9]]
+)
+toc()
+terra::writeRaster(wet_div_1000,
+                   filename = "processed_data/wetlands_density_1000.tif",
+                   overwrite = TRUE)
+
