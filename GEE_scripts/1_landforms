@@ -438,3 +438,47 @@ Export.image.toAsset({
   maxPixels: 5072319225
 });
 */
+
+//Export base variables for validation!
+Export.image.toDrive({
+  image: DEM,
+  description: 'Brazil_DEM',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
+  image: flow_accumulation,
+  description: 'Brazil_flow_acc',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
+  image: slope,
+  description: 'Brazil_slope',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
+  image: aspect,
+  description: 'Brazil_slope',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
+  image: moisture_index,
+  description: 'Brazil_moisture_index',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
+  image: TPI,
+  description: 'Brazil_TPI',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
