@@ -415,6 +415,7 @@ Export.image.toDrive({
   description: 'landform_variety_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225 
 });
 
@@ -426,6 +427,7 @@ Export.image.toDrive({
   description: 'landform_types_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 /*
