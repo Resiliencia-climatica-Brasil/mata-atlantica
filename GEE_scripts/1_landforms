@@ -409,10 +409,10 @@ Map.add(legend);
 */
 
 // Exporting landform varieties
-var landform_variety_clip = landform_variety.clip(biome)
+var landform_variety_clip = landform_variety.clip(bioma)
 Export.image.toDrive({
-  image: landform_variety,
-  description: 'landform_variety',
+  image: landform_variety_clip,
+  description: 'landform_variety_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225 
