@@ -409,6 +409,7 @@ Map.add(legend);
 */
 
 // Exporting landform varieties
+var landform_variety_clip = landform_variety.clip(biome)
 Export.image.toDrive({
   image: landform_variety,
   description: 'landform_variety',
@@ -418,11 +419,11 @@ Export.image.toDrive({
 });
 
 
-//Exporting landform types for Cerrado       
-
+//Exporting landform types
+var landform_types_clip = landform_types.clip(bioma)
 Export.image.toDrive({
-  image: landform_types,
-  description: 'Brazil_landform_types',
+  image: landform_types_clip,
+  description: 'landform_types_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
