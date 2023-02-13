@@ -445,6 +445,7 @@ Export.image.toDrive({
   description: 'DEM_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var flow_clip = flow_accumulation.clip(bioma)
@@ -453,6 +454,7 @@ Export.image.toDrive({
   description: 'flow_acc_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var slope_clip = slope.clip(bioma)
@@ -461,6 +463,7 @@ Export.image.toDrive({
   description: 'slope_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var asp_clip = aspect.clip(bioma)
@@ -469,6 +472,7 @@ Export.image.toDrive({
   description: 'aspect_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var moist_clip = moisture_index.clip(bioma)
@@ -477,6 +481,7 @@ Export.image.toDrive({
   description: 'moisture_index_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var moist_class_clip = moisture_classes.clip(bioma)
@@ -485,6 +490,7 @@ Export.image.toDrive({
   description: 'moisture_classes_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var water_clip = water.clip(bioma)
@@ -493,6 +499,7 @@ Export.image.toDrive({
   description: 'water_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 var TPI_clip = TPI.clip(bioma)
@@ -501,6 +508,7 @@ Export.image.toDrive({
   description: 'TPI_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
 });
 
