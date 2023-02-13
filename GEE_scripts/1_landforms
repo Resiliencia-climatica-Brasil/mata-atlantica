@@ -438,60 +438,67 @@ Export.image.toAsset({
   maxPixels: 5072319225
 });
 */
-
+var DEM_clip = DEM.clip(bioma)
 //Export base variables for validation!
 Export.image.toDrive({
-  image: DEM,
-  description: 'Brazil_DEM',
+  image: DEM_clip,
+  description: 'DEM_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var flow_clip = flow_accumulation.clip(bioma)
 Export.image.toDrive({
-  image: flow_accumulation,
-  description: 'Brazil_flow_acc',
+  image: flow_clip,
+  description: 'flow_acc_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var slope_clip = slope.clip(bioma)
 Export.image.toDrive({
-  image: slope,
-  description: 'Brazil_slope',
+  image: slope_clip,
+  description: 'slope_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var asp_clip = aspect.clip(bioma)
 Export.image.toDrive({
-  image: aspect,
-  description: 'Brazil_aspect',
+  image: asp_clip,
+  description: 'aspect_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var moist_clip = moisture_index.clip(bioma)
 Export.image.toDrive({
   image: moisture_index,
-  description: 'Brazil_moisture_index',
+  description: 'moisture_index_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var moist_class_clip = moisture_classes.clip(bioma)
 Export.image.toDrive({
-  image: moisture_classes,
-  description: 'Brazil_moisture_classes',
+  image: moist_class_clip,
+  description: 'moisture_classes_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var water_clip = water.clip(bioma)
 Export.image.toDrive({
-  image: water,
-  description: 'Brazil_water',
+  image: water_clip,
+  description: 'water_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
 });
+var TPI_clip = TPI.clip(bioma)
 Export.image.toDrive({
-  image: TPI,
-  description: 'Brazil_TPI',
+  image: TPI_clip,
+  description: 'TPI_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
@@ -525,7 +532,7 @@ var variables = ee.Image.cat(
 var clipped_vars = variables.clip(bioma)                
 var points = clipped_vars.sample({region: bioma, 
                        scale: 92.76624232772798, 
-                       numPixels:5000
+                       numPixels:10000
                        });
 Export.table.toDrive({
   collection: points,
