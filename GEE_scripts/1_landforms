@@ -496,3 +496,28 @@ Export.image.toDrive({
   region: bioma,
   maxPixels: 5072319225
 });
+
+##
+var variables = ee.Image.cat([DEM, slope, aspect, water, TPI, flow_accumulation]);
+                
+var points = variables.sample({region: bioma, 
+                       scale: 92.76624232772798, 
+                       numPixels:5000
+                       numPixels:1000
+                       });
+Export.table.toDrive({
+  collection: points,
+  description: "extract_data",
+  folder: "GEE"
+  })
+
+
+
+
+
+
+
+
+
+
+
