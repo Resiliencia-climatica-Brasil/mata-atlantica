@@ -522,8 +522,8 @@ var variables = ee.Image.cat(
         "flow_acc",
         "moisture_index",
         "moisture_classes"]);
-                
-var points = variables.sample({region: bioma, 
+var clipped_vars = variables.clip(bioma)                
+var points = clipped_vars.sample({region: bioma, 
                        scale: 92.76624232772798, 
                        numPixels:5000
                        });
