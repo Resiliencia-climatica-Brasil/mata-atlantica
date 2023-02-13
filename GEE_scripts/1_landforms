@@ -476,6 +476,20 @@ Export.image.toDrive({
   maxPixels: 5072319225
 });
 Export.image.toDrive({
+  image: moisture_classes,
+  description: 'Brazil_moisture_classes',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
+  image: water,
+  description: 'Brazil_water',
+  scale: 92.76624,
+  region: bioma,
+  maxPixels: 5072319225
+});
+Export.image.toDrive({
   image: TPI,
   description: 'Brazil_TPI',
   scale: 92.76624,
