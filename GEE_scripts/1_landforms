@@ -521,7 +521,7 @@ var variables = ee.Image.cat(
         "TPI",
         "flow_acc",
         "moisture_index",
-        "moisture_classes"]);;
+        "moisture_classes"]);
                 
 var points = variables.sample({region: bioma, 
                        scale: 92.76624232772798, 
