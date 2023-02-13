@@ -497,8 +497,31 @@ Export.image.toDrive({
   maxPixels: 5072319225
 });
 
-##
-var variables = ee.Image.cat([DEM, slope, aspect, water, TPI, flow_accumulation]);
+
+var variables = ee.Image.cat(
+  [
+    landform_types,
+    landform_variety,
+    DEM,
+    slope,
+    aspect,
+    water,
+    TPI,
+    flow_accumulation,
+    moisture_index,
+    moisture_classes
+    ]).rename(
+      [
+        "landform_types",
+        "landform_variety",
+        "DEM",
+        "slope",
+        "aspect",
+        "water",
+        "TPI",
+        "flow_acc",
+        "moisture_index",
+        "moisture_classes"]);;
                 
 var points = variables.sample({region: bioma, 
                        scale: 92.76624232772798, 
