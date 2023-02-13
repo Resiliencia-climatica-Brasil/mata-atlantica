@@ -29,3 +29,12 @@ download_results("wetlands_density-")#o tracinho é para diferenciar de _1000
 download_results("wetlands_density_1000")
 
 # NOTE: We have to ignore this folder to avoid UPLOADING back to GEE. It will kill our quota. 
+
+# environmental rasters for validation
+drive_find("Brazil_")
+download_results("slope")
+download_results("Brazil_moisture_index")
+download_results("Brazil_flow_acc")
+download_results("Brazil_aspect")
+download_results("Brazil_TPI")
+download_results("Brazil_DEM")

@@ -121,3 +121,80 @@ terra::writeRaster(wet_div_1000,
                    filename = "processed_data/wetlands_density_1000.tif",
                    overwrite = TRUE)
 
+
+
+# ENVIRONMENTAL DATA FOR VALIDATION----
+## DEM------
+files <- list.files("drive_data", full.names = T, pattern = "DEM")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+DEM <- terra::mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]]
+)
+toc()
+terra::writeRaster(DEM,
+                   filename = "processed_data/DEM.tif",
+                   overwrite = TRUE)
+
+## Slope------
+files <- list.files("drive_data", full.names = T, pattern = "slope")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+slope <- terra::mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]]
+)
+toc()
+tic()
+terra::writeRaster(slope,
+                   filename = "processed_data/slope.tif",
+                   overwrite = TRUE)
+toc()
+## Aspect------
+files <- list.files("drive_data", full.names = T, pattern = "aspect")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+aspect <- terra::mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]]
+)
+toc()
+terra::writeRaster(aspect,
+                   filename = "processed_data/aspect.tif",
+                   overwrite = TRUE)
+
+## flow acc------
+files <- list.files("drive_data", full.names = T, pattern = "flow_acc")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+flow_acc <- terra::mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]]
+)
+toc()
+terra::writeRaster(flow_acc,
+                   filename = "processed_data/flow_acc.tif",
+                   overwrite = TRUE)
+## TPI------
+files <- list.files("drive_data", full.names = T, pattern = "TPI")
+all_stack <- purrr::map(files, terra::rast)
+tic()
+tpi <- terra::mosaic(
+  all_stack[[1]],
+  all_stack[[2]],
+  all_stack[[3]],
+  all_stack[[4]]
+)
+toc()
+terra::writeRaster(tpi,
+                   filename = "processed_data/TPI.tif",
+                   overwrite = TRUE)
