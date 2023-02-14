@@ -91,5 +91,6 @@ Export.image.toDrive({
   description: 'elevation_range_residual_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225});
   
