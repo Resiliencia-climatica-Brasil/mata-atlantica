@@ -94,6 +94,7 @@ Export.image.toDrive({
   description: 'wetlands_density_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 2536236638
 });
 var wetlands_density_1000_clip = wetlands_density_1000.clip(bioma)
@@ -102,6 +103,7 @@ Export.image.toDrive({
   description: 'wetlands_density_1000_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 2536236638
 });
 
