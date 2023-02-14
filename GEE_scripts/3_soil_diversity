@@ -126,6 +126,7 @@ Export.image.toDrive({
   description: 'soil_clip',
   scale: 92.76624,
   region: bioma,
+  folder: "GEE",
   maxPixels: 5072319225
   })
 
