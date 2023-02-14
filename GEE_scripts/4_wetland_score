@@ -88,18 +88,18 @@ Export.image.toDrive({
 });
 */
 // Wetlands density at 100 and 1000 acres
-
+var wetlands_density_clip = wetlands_density.clip(bioma)
 Export.image.toDrive({
-  image: wetlands_density,
-  description: 'wetlands_density',
+  image: wetlands_density_clip,
+  description: 'wetlands_density_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 2536236638
 });
-
+var wetlands_density_1000_clip = wetlands_density_1000.clip(bioma)
 Export.image.toDrive({
-  image: wetlands_density_1000,
-  description: 'wetlands_density_1000',
+  image: wetlands_density_1000_clip,
+  description: 'wetlands_density_1000_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 2536236638
