@@ -117,13 +117,13 @@ var soil_diversity = ee.ImageCollection.fromImages(soil_list)
 
 Map.setCenter(-50, -16, 11);
 
-Map.addLayer(soil_diversity);                     
 
 /* Export soil diversity */
-
+var soil_clip = soil_diversity.clip(bioma)
+Map.addLayer(soil_clip);                     
 Export.image.toDrive({
-  image: soil_diversity,
-  description: 'soil_diversity',
+  image: soil_clip,
+  description: 'soil_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225
