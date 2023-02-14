@@ -85,10 +85,10 @@ Map.setCenter(-40, -8, 7);
 Map.addLayer(residuals,{} ,"residuals");
 
 /* Export image */
-
+var residuals_clip = residuals.clip(bioma) 
 Export.image.toDrive({
-  image: residuals,
-  description: 'elevation_range_residual',
+  image: residuals_clip,
+  description: 'elevation_range_residual_clip',
   scale: 92.76624,
   region: bioma,
   maxPixels: 5072319225});
