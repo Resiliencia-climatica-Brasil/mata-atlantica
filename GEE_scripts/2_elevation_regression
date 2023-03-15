@@ -1,7 +1,7 @@
 /**
  * This script generates and exports to Google Drive a raster of elevation range at a scale of ~ 90 m for Brazil.  
 
-- Steps to calculate elavation range
+- Steps to calculate elevation range
 
 1- Calculate elevation range within a neighborhood
 2- Run a regression between elevation range and elevation
@@ -27,7 +27,7 @@ var dataset = ee.Image("MERIT/DEM/v1_0_3");
 /*
 Elevation range is calculated within a neighborhood region
 
-Following TNC, the circle radius was defined as 100 acre, calculated backwards to squared meters, than to meters.
+Following TNC, the circle radius was defined as 100 acre, calculated backwards to squared meters, then to meters.
 
 r = (A/pi)^1/2
 
