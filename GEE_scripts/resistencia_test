@@ -30,7 +30,8 @@ Export.image.toAsset({
 */
 Export.image.toDrive({
   image: image,
-  description:"test area",
-  assetId: "test area",
-  pyramidingPolicy:"mode", 
+  description:"test_area",
+  //assetId: "test area",
+  //pyramidingPolicy:"mode", 
+  folder: "GEE",
   region:geometry})
