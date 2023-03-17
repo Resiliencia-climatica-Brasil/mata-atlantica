@@ -13,3 +13,7 @@ var geometry =
           [-47.31838554700184, -23.49123132682909]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //clip assets to this bounding box
+var landvar = ee.FeatureCollection("users/andreasancheztapia/assets/landform_variety_clip")
+           
+                        
+                        
