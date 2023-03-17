@@ -26,3 +26,9 @@ Export.image.toAsset({
   assetId: "test area",
   pyramidingPolicy:"mode", 
   region:geometry})
+Export.image.toDrive({
+  image: image,
+  description:"test area",
+  assetId: "test area",
+  pyramidingPolicy:"mode", 
+  region:geometry})
