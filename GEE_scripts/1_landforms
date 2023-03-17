@@ -410,26 +410,27 @@ Map.add(legend);
 
 // Exporting landform varieties
 var landform_variety_clip = landform_variety.clip(bioma)
-Export.image.toDrive({
+Export.image.toAsset({
   image: landform_variety_clip,
   description: 'landform_variety_clip',
   scale: 92.76624,
   region: bioma,
-  folder: "GEE",
+  //folder: "GEE",
   maxPixels: 5072319225 
 });
 
 
 //Exporting landform types
 var landform_types_clip = landform_types.clip(bioma)
-Export.image.toDrive({
+Export.image.toAsset({
   image: landform_types_clip,
   description: 'landform_types_clip',
   scale: 92.76624,
   region: bioma,
-  folder: "GEE",
+  //folder: "GEE",
   maxPixels: 5072319225
 });
+
 /*
 Export.image.toAsset({
   image: landform_types,
@@ -441,6 +442,8 @@ Export.image.toAsset({
   maxPixels: 5072319225
 });
 */
+
+/*
 var DEM_clip = DEM.clip(bioma)
 //Export base variables for validation!
 Export.image.toDrive({
@@ -514,7 +517,7 @@ Export.image.toDrive({
   folder: "GEE",
   maxPixels: 5072319225
 });
-
+*/
 
 var variables = ee.Image.cat(
   [
@@ -550,14 +553,4 @@ Export.table.toDrive({
   description: "extract_data",
   folder: "GEE"
   })
-
-
-
-
-
-
-
-
-
-
 
