@@ -413,8 +413,10 @@ var landform_variety_clip = landform_variety.clip(bioma)
 Export.image.toAsset({
   image: landform_variety_clip,
   description: 'landform_variety_clip',
+  assetId: "users/andreasancheztapia/assets/landform_types",
   scale: 92.76624,
   region: bioma,
+  pyramidingPolicy: "mode", 
   //folder: "GEE",
   maxPixels: 5072319225 
 });
