@@ -20,8 +20,8 @@ var landvar = ee.FeatureCollection("users/andreasancheztapia/assets/landform_var
 
 //var clipped = image.clip(geometry)
 Map.addLayer(image, imageVisParam, "BAF")
-Export.image.toAsset(clipped,
+Export.image.toAsset({clipped,
 description:"test area",
 assetId: "test area",
 pyramidingPolicy:"mode", 
-region:geometry)
+region:geometry})
