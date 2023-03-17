@@ -17,4 +17,11 @@ var geometry =
 //clip assets to this bounding box
 var landvar = ee.FeatureCollection("users/andreasancheztapia/assets/landform_variety_clip")
            
-Map.addLayer(image, imagevisParams, "BAF")
+
+//var clipped = image.clip(geometry)
+Map.addLayer(image, imageVisParam, "BAF")
+Export.image.toAsset(clipped,
+description:"test area",
+assetId: "test area",
+pyramidingPolicy:"mode", 
+region:geometry)
