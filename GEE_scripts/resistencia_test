@@ -11,15 +11,18 @@ var geometry =
           [-46.08517021497059, -23.405559289965222],
           [-45.06618828137684, -23.405559289965222],
           [-45.06618828137684, -22.621892275282878]]], null, false),
-    image = ee.Image("users/andreasancheztapia/BAF_resistencia"),
-    imageVisParam = {"opacity":1,"bands":["b1"],"min":11.676614761352539,"max":240.7889404296875,"gamma":1};
+    resistencia = ee.Image("users/andreasancheztapia/BAF_resistencia"),
+    imageVisParam = {"opacity":1,"bands":["b1"],"min":11.676614761352539,"max":240.7889404296875,"gamma":1},
+    conectividade = ee.Image("users/andreasancheztapia/omniscape_baf");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// importa BAF_resistencia
 //clip assets to this bounding box
-var landvar = ee.FeatureCollection("users/andreasancheztapia/assets/landform_variety_clip")
+
            
 
 //var clipped = image.clip(geometry)
-Map.addLayer(image, imageVisParam, "BAF")
+Map.addLayer(resistencia, imageVisParam, "BAF")
+Map.addLayer(conectividade, name:"conectivity")
 /*
 Export.image.toAsset({
   image: image,
@@ -29,7 +32,7 @@ Export.image.toAsset({
   region:geometry})
 */
 Export.image.toDrive({
-  image: image,
+  image: resistencia,
   description:"test_area",
   //assetId: "test area",
   //pyramidingPolicy:"mode", 
