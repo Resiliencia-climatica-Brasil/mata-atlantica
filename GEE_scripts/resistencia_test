@@ -1,6 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -13,7 +14,9 @@ var geometry =
           [-45.06618828137684, -22.621892275282878]]], null, false),
     resistencia = ee.Image("users/andreasancheztapia/BAF_resistencia"),
     imageVisParam = {"opacity":1,"bands":["b1"],"min":11.676614761352539,"max":240.7889404296875,"gamma":1},
-    conectividade = ee.Image("users/andreasancheztapia/omniscape_baf");
+    conectividade = ee.Image("users/andreasancheztapia/omniscape_baf"),
+    imageVisParam2 = {"opacity":0.5700000000000001,"bands":["b1"],"max":1.9063025780291951,"gamma":0.6869999999999999},
+    imageVisParam3 = {"opacity":0.5700000000000001,"bands":["b1"],"max":5.573975688482268,"gamma":3.3360000000000003};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // importa BAF_resistencia
 //clip assets to this bounding box
@@ -22,7 +25,7 @@ var geometry =
 
 //var clipped = image.clip(geometry)
 Map.addLayer(resistencia, imageVisParam, "BAF")
-Map.addLayer(conectividade, imageVisParam,"conectivity")
+Map.addLayer(conectividade, imageVisParam3,"conectivity")
 /*
 Export.image.toAsset({
   image: image,
@@ -31,6 +34,7 @@ Export.image.toAsset({
   pyramidingPolicy:"mode", 
   region:geometry})
 */
+/*
 Export.image.toDrive({
   image: resistencia,
   description:"test_area",
@@ -38,3 +42,4 @@ Export.image.toDrive({
   //pyramidingPolicy:"mode", 
   folder: "GEE",
   region:geometry})
+  */
