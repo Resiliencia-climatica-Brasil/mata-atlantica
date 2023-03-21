@@ -22,7 +22,7 @@ var geometry =
 
 //var clipped = image.clip(geometry)
 Map.addLayer(resistencia, imageVisParam, "BAF")
-Map.addLayer(conectividade, name:"conectivity")
+Map.addLayer(conectividade, name="conectivity")
 /*
 Export.image.toAsset({
   image: image,
