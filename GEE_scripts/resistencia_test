@@ -1,17 +1,16 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
+var test_area_2 = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-46.08517021497059, -22.621892275282878],
-          [-46.08517021497059, -23.405559289965222],
-          [-45.06618828137684, -23.405559289965222],
-          [-45.06618828137684, -22.621892275282878]]], null, false),
+        [[[-44.07741875012684, -20.15679997345879],
+          [-44.07741875012684, -23.223953185995313],
+          [-40.07015556653309, -23.223953185995313],
+          [-40.07015556653309, -20.15679997345879]]], null, false),
     resistencia = ee.Image("users/andreasancheztapia/BAF_resistencia"),
     imageVisParam = {"opacity":1,"bands":["b1"],"min":11.676614761352539,"max":240.7889404296875,"gamma":1},
     conectividade = ee.Image("users/andreasancheztapia/omniscape_baf"),
@@ -21,22 +20,21 @@ var geometry =
     imageVisParam4 = {"opacity":0.5700000000000001,"bands":["b1"],"max":7.276359872897146,"gamma":3.3360000000000003};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // importa BAF_resistencia
-//clip assets to this bounding box
+//clip resistencia layer to this bounding box
 
-           
-
-//var clipped = image.clip(geometry)
-Map.addLayer(resistencia, imageVisParam, "BAF")
-Map.addLayer(conectividade, imageVisParam3,"conectivity")
-Map.addLayer(cumulative, imageVisParam4, "cumulative")
-/*
 Export.image.toAsset({
-  image: image,
-  description:"test area",
-  assetId: "test area",
+  image: resistencia,
+  description:"resistencia_test_area",
+  assetId: "test_area_2",
   pyramidingPolicy:"mode", 
   region:geometry})
-*/
+//This goes to Omniscape!
+
+//Upload and view results
+//var clipped = image.clip(geometry)
+//Map.addLayer(resistencia, imageVisParam, "BAF")
+//Map.addLayer(conectividade, imageVisParam3,"conectivity")
+//Map.addLayer(cumulative, imageVisParam4, "cumulative")
 /*
 Export.image.toDrive({
   image: resistencia,
