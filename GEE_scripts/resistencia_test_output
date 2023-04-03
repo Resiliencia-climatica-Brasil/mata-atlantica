@@ -44,4 +44,11 @@ Export.image.toDrive({
   //pyramidingPolicy:"mode", 
   folder: "GEE",
   region:test_area_2})
+Export.image.toDrive({
+  image: cumulative,
+  description:"original_cumulative_baf",
+  //assetId: "test area",
+  //pyramidingPolicy:"mode", 
+  folder: "GEE",
+  region:test_area_2})
 
