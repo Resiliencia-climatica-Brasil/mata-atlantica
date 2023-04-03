@@ -19,28 +19,3 @@ var test_area_2 =
     cumulative = ee.Image("users/andreasancheztapia/cumulative_mode"),
     imageVisParam4 = {"opacity":0.5700000000000001,"bands":["b1"],"max":7.276359872897146,"gamma":3.3360000000000003};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// importa BAF_resistencia
-//clip resistencia layer to this bounding box
-
-Export.image.toAsset({
-  image: resistencia,
-  description:"resistencia_test_area",
-  assetId: "test_area_2",
-  pyramidingPolicy:"mode", 
-  region:geometry})
-//This goes to Omniscape!
-
-//Upload and view results
-//var clipped = image.clip(geometry)
-//Map.addLayer(resistencia, imageVisParam, "BAF")
-//Map.addLayer(conectividade, imageVisParam3,"conectivity")
-//Map.addLayer(cumulative, imageVisParam4, "cumulative")
-/*
-Export.image.toDrive({
-  image: resistencia,
-  description:"test_area",
-  //assetId: "test area",
-  //pyramidingPolicy:"mode", 
-  folder: "GEE",
-  region:geometry})
-  */
