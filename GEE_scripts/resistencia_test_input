@@ -30,11 +30,6 @@ Export.image.toAsset({
   region:geometry})
 //This goes to Omniscape!
 
-//Upload and view results
-//var clipped = image.clip(geometry)
-//Map.addLayer(resistencia, imageVisParam, "BAF")
-//Map.addLayer(conectividade, imageVisParam3,"conectivity")
-//Map.addLayer(cumulative, imageVisParam4, "cumulative")
 /*
 Export.image.toDrive({
   image: resistencia,
