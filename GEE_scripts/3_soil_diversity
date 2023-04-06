@@ -119,10 +119,9 @@ Map.setCenter(-50, -16, 11);
 
 
 /* Export soil diversity */
-var soil_clip = soil_diversity.clip(bioma)
 Map.addLayer(soil_clip);                     
 Export.image.toDrive({
-  image: soil_clip,
+  image: soil_diversity,
   description: 'soil_clip',
   scale: 92.76624,
   region: bioma,
