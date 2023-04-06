@@ -4,11 +4,24 @@ var image = ee.Image("users/andreasancheztapia/omniscape_baf");
 
 
 var calculate_Z_scores = function(raster) {
-  var z = raster - raster.mean / raster.Reducer.stdDev
-  return z
+  var z = raster - raster.reduce(ee.Reducer.mean()) / raster.reduce(ee.Reducer.stdDev())
+  //return image
+    //.addBands(z)
+    //.rename('z-score')
+    //.float();
+    return z
 }
 
 var Z = calculate_Z_scores(image)
 Map.addLayer(image)
 Map.addLayer(Z)
-Map.centerObject(Z)
+//Map.addLayer(Z)
+//Map.centerObject(Z)
+/*
+// Reduce the collection with a median reducer.
+        var median = current_index.reduce(ee.Reducer.median());
+        // Reduce the collection with a stdDev reducer.
+        var stdDev = current_index.reduce(ee.Reducer.stdDev());
+        // return image with median and stdDev
+        
+        */
