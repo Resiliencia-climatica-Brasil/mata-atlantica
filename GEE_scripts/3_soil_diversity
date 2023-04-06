@@ -68,7 +68,7 @@ var soil_presence = function(code){
 
 }
 
-/* Import biome polygons*/
+/* Import biome polygons*/                                             
 
 var bioma = ee.FeatureCollection("projects/ee-lucasljardim9/assets/Biome")
                         .map(function(feature){
