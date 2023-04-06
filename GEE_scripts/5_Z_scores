@@ -2,19 +2,38 @@
 var image = ee.Image("users/andreasancheztapia/landform_variety_clip");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
+var mean = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  //geometry: region.geometry(),
+  scale: 92.76624,
+  bestEffort: true
+})
+print(mean)
+var sd = image.reduceRegion({
+  reducer: ee.Reducer.stdDev(),
+  //geometry: region.geometry(),
+  scale: 92.76624,
+  bestEffort: true
+})
+print(sd)
 
+/*
 var calculate_Z_scores = function(raster) {
-  var z = raster - raster.reduce(ee.Reducer.mean()) / raster.reduce(ee.Reducer.stdDev())
+  //var mean = raster.reduce(ee.Reducer.mean())
+  var stats = raster.aggregate_stats
+  var sd = statsraster.reduce(ee.Reducer.stdDev())
+  var z = (raster - raster.reduce(ee.Reducer.mean())) / raster.reduce(ee.Reducer.stdDev())
   return raster
-    .addBands(z)
-    .rename('z-score')
-    .float();
+    .addBands(mean)
+    .addBands(sd)
+    //.rename('z-score')
+    //.float();
     //return z
 }
 
 var Z = calculate_Z_scores(image)
-Map.addLayer(image)
-Map.addLayer(image, value: "z-score")
+Map.addLayer(Z)
+//Map.addLayer(image, value: "z-score")
 //Map.addLayer(Z)
 //Map.centerObject(Z)
 /*
