@@ -17,15 +17,23 @@ var sd = image.reduceRegion({
 })
 print(sd)
 
-/*
+
 var calculate_Z_scores = function(raster) {
-  //var mean = raster.reduce(ee.Reducer.mean())
-  var stats = raster.aggregate_stats
-  var sd = statsraster.reduce(ee.Reducer.stdDev())
-  var z = (raster - raster.reduce(ee.Reducer.mean())) / raster.reduce(ee.Reducer.stdDev())
+  var mean = raster.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  //geometry: region.geometry(),
+  scale: 92.76624,
+  bestEffort: true
+})
+var sd = raster.reduceRegion({
+  reducer: ee.Reducer.stdDev(),
+  //geometry: region.geometry(),
+  scale: 92.76624,
+  bestEffort: true
+})
+  var z = (raster - mean) / sd)
   return raster
-    .addBands(mean)
-    .addBands(sd)
+    .addBands(z)
     //.rename('z-score')
     //.float();
     //return z
