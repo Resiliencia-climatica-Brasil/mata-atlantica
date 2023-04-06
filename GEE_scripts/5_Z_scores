@@ -16,6 +16,11 @@ var sd = image.reduceRegion({
   bestEffort: true
 })
 print(sd)
+var image2 = image
+.addBands(mean)
+.addBands(sd)
+
+Map.addLayer(image2)
 
 
 var calculate_Z_scores = function(raster) {
@@ -31,12 +36,10 @@ var sd = raster.reduceRegion({
   scale: 92.76624,
   bestEffort: true
 })
-  var z = (raster - mean) / sd)
+  var z = raster.subtract(mean).divide(sd)
   return raster
-    .addBands(z)
-    //.rename('z-score')
-    //.float();
-    //return z
+  .addBands(z)
+  .float()
 } 
 
 var Z = calculate_Z_scores(image)
