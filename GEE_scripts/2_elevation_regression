@@ -94,3 +94,13 @@ Export.image.toDrive({
   folder: "GEE",
   maxPixels: 5072319225});
   
+/* Export as asset */
+Export.image.toAsset({
+  image: residuals,
+  description: 'elevation_range_residual_clip',
+  scale: 92.76624,
+  region: bioma,
+  pyramiding_policy: "mean",
+  //folder: "GEE",
+  maxPixels: 5072319225});
+  
