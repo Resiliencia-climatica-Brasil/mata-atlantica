@@ -1,0 +1,9 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var image = ee.Image("users/andreasancheztapia/omniscape_baf");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+
+var calculate_Z_scores = function(raster) {
+  var z = raster - raster.mean / raster.sd
+  return z
+}
