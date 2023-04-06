@@ -100,7 +100,7 @@ Export.image.toAsset({
   description: 'elevation_range_residual_clip',
   scale: 92.76624,
   region: bioma,
-  pyramiding_policy: "mean",
+  pyramidingPolicy: "mean",
   //folder: "GEE",
   maxPixels: 5072319225});
   
