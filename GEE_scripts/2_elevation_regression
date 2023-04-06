@@ -97,7 +97,7 @@ Export.image.toDrive({
 /* Export as asset */
 Export.image.toAsset({
   image: residuals,
-  description: 'elevation_range_residual_clip',
+  description: 'elevation_range_residual_asset',
   scale: 92.76624,
   region: bioma,
   pyramidingPolicy: "mean",
