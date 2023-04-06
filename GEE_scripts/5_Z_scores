@@ -1,20 +1,20 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var image = ee.Image("users/andreasancheztapia/omniscape_baf");
+var image = ee.Image("users/andreasancheztapia/landform_variety_clip");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
 var calculate_Z_scores = function(raster) {
   var z = raster - raster.reduce(ee.Reducer.mean()) / raster.reduce(ee.Reducer.stdDev())
-  //return image
-    //.addBands(z)
-    //.rename('z-score')
-    //.float();
-    return z
+  return raster
+    .addBands(z)
+    .rename('z-score')
+    .float();
+    //return z
 }
 
 var Z = calculate_Z_scores(image)
 Map.addLayer(image)
-Map.addLayer(Z)
+Map.addLayer(image, value: "z-score")
 //Map.addLayer(Z)
 //Map.centerObject(Z)
 /*
