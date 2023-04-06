@@ -9,3 +9,4 @@ var calculate_Z_scores = function(raster) {
 }
 
 var Z = calculate_Z_scores(image)
+Map.addLayer(Z)
