@@ -540,9 +540,9 @@ Export.table.toDrive({
 
 //creating a center for the maps
 
-//var center = {lon:-59.971332,lat:-3.076426, zoom:11}; // Manaus showning problems with wetlands classifications
-/*
-var center = {lon:-60.736,lat:5.2204, zoom:12}; // Mount Roraima
+var center = {lon:-43,lat:-20, zoom:11}; 
+
+//var center = {lon:-60.736,lat:5.2204, zoom:12}; // Mount Roraima
 
 // Create two maps.
 var leftMap = ui.Map(center);
@@ -573,4 +573,4 @@ leftMap.addLayer(imagem.reproject('EPSG:4326', null, 92.76624).sldStyle(sld_inte
 
 //adding TNC classification on the right
 rightMap.addLayer(landform_types.reproject('EPSG:4326', null, 92.76624).sldStyle(sld_intervals).clip(bioma), {}, '1-5-7 Window');
-*/
+
