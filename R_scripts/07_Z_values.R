@@ -1,25 +1,28 @@
 library(terra)
-
-bioma <- vect("./processed_data/ecoregions/wwf_cerrado.shp")
+library(dplyr)
+brasil <- vect("./data/bioma/BR_BIOMAS_IBGE.shp")
+brasil
+baf <- brasil[brasil$CD_LEGENDA == "MATA ATLANTICA"]
+plot(baf)
 
 # Elevation range ---------------------------------------------------------
 
-#elevation_range <- log(do.call(terra::merge, 
-#                           lapply(dir("./processed_data/elevation_range/", pattern = "elevation_range", full.names = TRUE), 
+#elevation_range <- log(do.call(terra::merge,
+#                           lapply(dir("./processed_data/elevation_range/", pattern = "elevation_range", full.names = TRUE),
 #                                  terra::rast)) + 0.01)
 
 
 # Transform elevation range and calculate Z-scores -------------------------
 
-elevation_range <- terra::rast("./processed_data/elevation_range/elevation_range_residual.tif")
+elevation_range <- terra::rast("./processed_data/elevation_range.tif")
 
 #elevation_range[is.na(elevation_range)] <- 0
 
-elevation_range <- terra::mask(elevation_range, bioma)
+elevation_range <- terra::mask(elevation_range, brasil)
 
 elevation_range_Z <- (elevation_range - global(elevation_range, mean, na.rm = TRUE)[, 1]) / global(elevation_range, sd, na.rm = TRUE)[, 1]
 
-
+plot(elevat)
 # Landform variety --------------------------------------------------------
 
 # Transform landform variety and calculate Z-scores -----------------------
@@ -44,7 +47,7 @@ wetland_density_100 <- terra::rast("./processed_data/wetland/wetlands_density.ti
 
 wetland_density_100 <- terra::project(wetland_density_100, landform_Z)
 
-# Also, GEE created null values for 0 density values, we assigned 0 to the values before 
+# Also, GEE created null values for 0 density values, we assigned 0 to the values before
 # calculating Z-scores
 
 wetland_density_100[is.na(wetland_density_100)] <- 0
@@ -68,7 +71,7 @@ wetland_density_1000 <- terra::mask(wetland_density_1000, bioma)
 wetland_density_1000_Z <- (wetland_density_1000 - global(wetland_density_1000, mean, na.rm = TRUE)[, 1]) / global(wetland_density_1000, sd, na.rm = TRUE)[, 1]
 
 # Wetland density ---------------------------------------------------------
-# Calculating wetland density as the average of two wetland density window 100 and 1000 acres 
+# Calculating wetland density as the average of two wetland density window 100 and 1000 acres
 
 wetland_density <- ((2 * wetland_density_100_Z) + wetland_density_1000_Z) / 3
 
@@ -89,7 +92,7 @@ wetland_patchness_Z <- (wetland_patchness - global(wetland_patchness, mean, na.r
 # Wetland score is the average of wetland density and wetland patchness, but only when patchness is higher than density
 
 wetland_score <- terra::ifel(wetland_patchness_Z > wetland_density, ((wetland_density * 3) + wetland_patchness_Z) / 4, wetland_density)
-                     
+
 # Soil diversity ----------------------------------------------------------
 
 soil_diversity <- terra::rast("./processed_data/soil/soil_diversity.tif")

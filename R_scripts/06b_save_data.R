@@ -1,4 +1,4 @@
-# Creates a mosaic from the data saved from GDrive and saves them to /processed_data 
+# Creates a mosaic from the data saved from GDrive and saves them to /processed_data
 # Processed_data also needs to be ignored by git!
 library(terra)
 library(tictoc)
@@ -20,6 +20,7 @@ Landform_types <- mosaic(
   all_stack[[9]]
 )
 toc()
+
 terra::writeRaster(Landform_types,
                    filename = "processed_data/landform_types.tif",
                    overwrite = TRUE)
@@ -35,8 +36,8 @@ Landform_var <- mosaic(
   all_stack[[4]]
 )
 
-terra::writeRaster(Landform_var, 
-                   filename = "processed_data/landform_variety.tif", 
+terra::writeRaster(Landform_var,
+                   filename = "processed_data/landform_variety.tif",
                    overwrite = TRUE)
 
 # elevation range residual-----
