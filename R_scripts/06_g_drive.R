@@ -2,7 +2,7 @@
 
 library(googledrive)
 googledrive::drive_auth() #dar acessso desde o navegador
-2
+1
 ## Criando a pasta para não sobreescrever processed_data:----
 #dir.create("drive_data")#run only once
 
@@ -11,7 +11,7 @@ googledrive::drive_auth() #dar acessso desde o navegador
 ## with a function so we don't copy code
 download_results <- function(pattern = "landform_variety", dest_folder = "drive_data") {
   lf_var <- drive_find(pattern = pattern)
-  #Download from drive using the ids: 
+  #Download from drive using the ids:
   for (i in seq_along(lf_var$id)) {
     id <- lf_var$id[i]
     googledrive::drive_download(file = as_id(id),
@@ -28,7 +28,7 @@ download_results <- function(pattern = "landform_variety", dest_folder = "drive_
 # download_results("wetlands_density-")#o tracinho é para diferenciar de _1000
 # download_results("wetlands_density_1000")
 
-# NOTE: We have to ignore this folder to avoid UPLOADING back to GEE. It will kill our quota. 
+# NOTE: We have to ignore this folder to avoid UPLOADING back to GEE. It will kill our quota.
 
 # environmental rasters for validation
 # drive_find("Brazil_")
@@ -40,9 +40,14 @@ download_results <- function(pattern = "landform_variety", dest_folder = "drive_
 # download_results("Brazil_DEM")
 
 #tabela
-table <- drive_find("extract_data.csv")
+
+table <- drive_find("extract_data")
 table
-data <- drive_download(table, path = "results/extract_data.csv", overwrite = TRUE)
+dir.create("results")
+data <- drive_download(table$id[1], path = "results/extract_data3.csv", overwrite = TRUE)
+data2 <- drive_download(table$id[2], path = "results/extract_data4.csv", overwrite = TRUE)
+dim(data)
+dim(data2)
 #i am saving elsewhere because i want to be able to version this
 
 # new download, everything w clip
@@ -50,7 +55,7 @@ clip_files <- drive_find("_clip")
 download_clipped <- function(pattern = "landform_variety", dest_folder = "drive_data") {
   #lf_var <- drive_find(pattern = pattern)
   lf_var <- clip_files[stringr::str_detect(string = clip_files$name, pattern = pattern),]
-  #Download from drive using the ids: 
+  #Download from drive using the ids:
   for (i in seq_along(lf_var$id)) {
     id <- lf_var$id[i]
     googledrive::drive_download(file = as_id(id),
