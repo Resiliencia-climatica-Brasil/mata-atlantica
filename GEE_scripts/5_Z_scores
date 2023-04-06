@@ -4,9 +4,11 @@ var image = ee.Image("users/andreasancheztapia/omniscape_baf");
 
 
 var calculate_Z_scores = function(raster) {
-  var z = raster - raster.mean / raster.sd
+  var z = raster - raster.mean / raster.Reducer.stdDev
   return z
 }
 
 var Z = calculate_Z_scores(image)
+Map.addLayer(image)
 Map.addLayer(Z)
+Map.centerObject(Z)
